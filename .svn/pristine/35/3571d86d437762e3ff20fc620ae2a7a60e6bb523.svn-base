@@ -1,0 +1,28 @@
+/* 
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+        function updateTable() {
+            $.ajax({ url: "GetClientServlet",
+                success : function(text){
+                    response = text;
+                    if (response == "failure") {
+                        $(location).attr("href","index.jsp");
+                    } else {
+                        var jsonGot = JSON.parse(response);
+                        document.getElementById("fieldName").value = jsonGot.name;
+                        document.getElementById("fieldSurname").value = jsonGot.surname;
+                        document.getElementById("fieldMiddlename").value = jsonGot.middlename;
+                        document.getElementById("fieldAddress").value = jsonGot.address;
+                        document.getElementById("fieldTelephone").value = jsonGot.telephone;
+                        document.getElementById("fieldBirthday").value = jsonGot.birthday;
+                        document.getElementById("fieldEmail").value = jsonGot.email;
+                        document.getElementById("fieldGender").value = jsonGot.sex;
+                    }
+                },
+                fail: function() { $(location).attr("href","index.jsp") }
+                });
+
+        }

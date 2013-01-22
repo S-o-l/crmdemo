@@ -1,0 +1,54 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
+<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
+<script src="http://twitter.github.com/bootstrap/assets/js/jquery.js"></script>
+<script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-collapse.js"></script>
+<script>
+    function getInfo() {
+        var xmlhttp;
+        console.log("---------- func started ---------")
+        if (window.XMLHttpRequest)
+              {// code for IE7+, Firefox, Chrome, Opera, Safari
+              xmlhttp=new XMLHttpRequest();
+            console.log("---------- code for IE7+, Firefox, Chrome, Opera, Safari started ---------")              
+              }
+            else
+              {// code for IE6, IE5
+              xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            console.log("---------- ccode for IE6, IE5 started ---------")              
+              }
+            xmlhttp.onreadystatechange=function()
+              {
+            console.log("---------- ready state changed ------------");                  
+            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                console.log("---------- ready state 4!!!!!!!!! ------------");
+                alert(xmlhttp.responseText);
+              }
+              }
+            xmlhttp.open("GET", "TestConnectionsServlet?" + "param1=" + document.getElementById("inputLogin").value + "&" + "param2=" + document.getElementById("inputPassword").value, true);
+            xmlhttp.send();
+    }
+</script>
+
+    </head>
+    <body>
+<form>
+  <fieldset>
+    <legend>Input form for .get function</legend>
+    <label>Input bank name</label>
+    <input type="text" id="inputLogin" placeholder="Type bank">
+    <label>Input account number</label>
+    <input type="text" id="inputPassword" placeholder="Type account number">
+    <input class="btn" onclick="getInfo()" value="Make request"/>
+  </fieldset>
+</form>
+    </body>
+</html>

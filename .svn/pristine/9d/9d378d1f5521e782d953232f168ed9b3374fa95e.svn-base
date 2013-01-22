@@ -1,0 +1,808 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package crmdb;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.Pattern;
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ *
+ * @author TempRDP2
+ */
+public class Validator {
+    
+    private String debugInfo;
+    
+    private String accinfoLogin;
+    private String accinfoPassword;
+    
+    private String agreementsAgr_number;
+    private String agreementsDate_written;
+    private String agreementsDate_begin;
+    private String agreementsDate_end;
+    private String agreementsDate_pay;
+    private String agreementsSum_pay;
+    
+    private String banksName;
+    private String banksMFO;
+    private String banksEdrpou;
+    private String banksAddress;
+    private String banksEmail;
+    private String banksTelephone;
+
+    private String banks_accountsAcc_number;    
+    private String banks_accountsCurrency;
+
+    private String clientsLogin;
+    private String clientsPassword;    
+    private String clientsEmail;    
+    private String clientsName;    
+    private String clientsMiddlename;
+    private String clientsSurname;
+    private String clientsBirthday;
+    private String clientsSex;    
+    private String clientsAddress;
+    private String clientsTelephone;
+    
+    private String paymentsPaym_sum;
+    private String paymentsPaym_purpose;
+    private String paymentsPaym_date;
+
+    private String usersName;
+    private String usersSurname;    
+    private String usersMiddlename;
+    private String usersBirthday;
+    private String usersSex;
+    private String usersAddress;
+    private String usersPosition;    
+    private String usersDepartment;
+    private String usersEmail;    
+   
+    private String codeAccinfoLogin = "00001001000001110100";
+    private String codeAccinfoPassword = "00000000000000111100";
+
+    private String codeAgreementsAgr_number = "00001000000000111000";
+    private String codeAgreementsDate_written = "00001000000000100010";
+    private String codeAgreementsDate_begin = "00001000000000100010";
+    private String codeAgreementsDate_end = "00001000000000100010";
+    private String codeAgreementsDate_pay = "00001000000000100010";
+    private String codeAgreementsSum_pay = "00000000000000100001";
+    
+    private String codeBanksName = "10101110000110111100";
+    private String codeBanksMFO = "00000000000000100001";
+    private String codeBanksEdrpou = "00000000000000100001";
+    private String codeBanksAddress = "11001001101110111100";
+    private String codeBanksEmail = "00011001000001111100";
+    private String codeBanksTelephone = "00001000000000100000";
+    
+    private String codeBanks_accountsAcc_number = "11001111001001111100";
+    private String codeBanks_accountsCurrency = "00000000000000011000";
+    
+    private String codeClientsLogin = "00001001000001110100";
+    private String codeClientsPassword = "00000000000000111100";
+    private String codeClientsEmail = "00011001000001111100";
+    private String codeClientsName = "00000000000000011100";
+    private String codeClientsMiddlename = "00000000000000011100";
+    private String codeClientsSurname = "00000000000000011100";
+    private String codeClientsBirthday = "00001000000000100010";
+    private String codeClientsSex = "00000000010000010100";
+    private String codeClientsAddress = "11001001101110111100";
+    private String codeClientsTelephone = "00001000000000100000";
+    
+    private String codePaymentsPaym_sum = "00000000000000100001";
+    private String codePaymentsPaym_purpose = "11101111100111111100";
+    private String codePaymentsPaym_date = "00001000000000100010";
+    
+    private String codeUsersName = "00000000000000011100";
+    private String codeUsersSurname = "00000000000000011100";
+    private String codeUsersMiddlename = "00000000000000011100";
+    private String codeUsersBirthday = "00001000000000100010";
+    private String codeUsersSex = "00000000010000010100";
+    private String codeUsersAddress = "11001001101110111100";
+    private String codeUsersPosition = "00000000000000111100";
+    private String codeUsersDepartment = "00000000000000111100";
+    private String codeUsersEmail = "00011001000001111100";    
+
+    private String patternAccinfoLogin = "aA0-_.";
+    private String patternAccinfoPassword = "0aA";
+
+    private String patternAgreementsAgr_number = "0A-";
+    private String patternAgreementsDate_written = "";
+    private String patternAgreementsDate_begin = "";
+    private String patternAgreementsDate_end = "";
+    private String patternAgreementsDate_pay = "";
+    private String patternAgreementsSum_pay = "";
+
+    private String patternBanksName = "0aA\"-():' ";
+    private String patternBanksMFO = "123456";
+    private String patternBanksEdrpou = "12345678";
+    private String patternBanksAddress = "0aA.,;-:'/ ";
+    private String patternBanksEmail = "0aA_-.@";
+    private String patternBanksTelephone = "0-";
+
+    private String patternBanks_accountsAcc_number = "0aA(),.:/-_";
+    private String patternBanks_accountsCurrency = "AAA";
+
+    private String patternClientsLogin = "0a-_.";
+    private String patternClientsPassword = "0aA";
+    private String patternClientsEmail = "0aA_-.@";
+    private String patternClientsName = "aA";
+    private String patternClientsMiddlename = "aA";
+    private String patternClientsSurname = "aA";
+    private String patternClientsBirthday = "";
+    private String patternClientsSex = "";
+    private String patternClientsAddress = "0aA.,;-:'/ ";
+    private String patternClientsTelephone = "0-";
+
+    private String patternPaymentsPaym_sum = "";
+    private String patternPaymentsPaym_purpose = "0aA\"-()_.,;:-'  ";
+    private String patternPaymentsPaym_date = "";
+
+    private String patternUsersName = "aA";
+    private String patternUsersSurname = "aA";
+    private String patternUsersMiddlename = "aA";
+    private String patternUsersBirthday = "";
+    private String patternUsersSex = "";
+    private String patternUsersAddress = "0aA.,;-:'/ ";
+    private String patternUsersPosition = "0aA";
+    private String patternUsersDepartment = "0aA";
+    private String patternUsersEmail = "0aA_-.@";
+
+    private int sizeAccinfoLoginMax = 32;
+    private int sizeAccinfoPasswordMax = 32;
+
+    private int sizeAgreementsAgr_numberMax = 32;
+    private int sizeAgreementsDate_writtenMax = 10;
+    private int sizeAgreementsDate_beginMax = 10;
+    private int sizeAgreementsDate_endMax = 10;
+    private int sizeAgreementsDate_payMax = 10;
+    private int sizeAgreementsSum_payMax = 64;
+
+    private int sizeBanksNameMax = 32;
+    private int sizeBanksMFOMax = 6;
+    private int sizeBanksEdrpouMax = 8;
+    private int sizeBanksAddressMax = 128;
+    private int sizeBanksEmailMax = 32;
+    private int sizeBanksTelephoneMax = 32;
+
+    private int sizeBanks_accountsAcc_numberMax = 32;
+    private int sizeBanks_accountsCurrencyMax = 3;
+
+    private int sizeClientsLoginMax = 32;
+    private int sizeClientsPasswordMax = 32;
+    private int sizeClientsEmailMax = 32;
+    private int sizeClientsNameMax = 32;
+    private int sizeClientsMiddlenameMax = 32;
+    private int sizeClientsSurnameMax = 32;
+    private int sizeClientsBirthdayMax = 10;
+    private int sizeClientsSexMax = 1;
+    private int sizeClientsAddressMax = 128;
+    private int sizeClientsTelephoneMax = 32;
+
+    private int sizePaymentsPaym_sumMax = 64;
+    private int sizePaymentsPaym_purposeMax = 500;
+    private int sizePaymentsPaym_dateMax = 10;
+
+    private int sizeUsersNameMax = 32;
+    private int sizeUsersSurnameMax = 32;
+    private int sizeUsersMiddlenameMax = 32;
+    private int sizeUsersBirthdayMax = 10;
+    private int sizeUsersSexMax = 1;
+    private int sizeUsersAddressMax = 128;
+    private int sizeUsersPositionMax = 128;
+    private int sizeUsersDepartmentMax = 128;
+    private int sizeUsersEmailMax = 32;
+
+    private int sizeAccinfoLoginMin = 6;
+    private int sizeAccinfoPasswordMin = 8;
+
+    private int sizeAgreementsAgr_numberMin = 6;
+    private int sizeAgreementsDate_writtenMin = 8;
+    private int sizeAgreementsDate_beginMin = 8;
+    private int sizeAgreementsDate_endMin = 6;
+    private int sizeAgreementsDate_payMin = 6;
+    private int sizeAgreementsSum_payMin = 1;
+
+    private int sizeBanksNameMin = 1;
+    private int sizeBanksMFOMin = 6;
+    private int sizeBanksEdrpouMin = 8;
+    private int sizeBanksAddressMin = 1;
+    private int sizeBanksEmailMin = 6;
+    private int sizeBanksTelephoneMin = 3;
+
+    private int sizeBanks_accountsAcc_numberMin = 3;
+    private int sizeBanks_accountsCurrencyMin = 3;
+
+    private int sizeClientsLoginMin = 6;
+    private int sizeClientsPasswordMin = 8;
+    private int sizeClientsEmailMin = 6;
+    private int sizeClientsNameMin = 1;
+    private int sizeClientsMiddlenameMin = 1;
+    private int sizeClientsSurnameMin = 1;
+    private int sizeClientsBirthdayMin = 8;
+    private int sizeClientsSexMin = 1;
+    private int sizeClientsAddressMin = 1;
+    private int sizeClientsTelephoneMin = 3;
+
+    private int sizePaymentsPaym_sumMin = 1;
+    private int sizePaymentsPaym_purposeMin = 1;
+    private int sizePaymentsPaym_dateMin = 8;
+
+    private int sizeUsersNameMin = 1;
+    private int sizeUsersSurnameMin = 1;
+    private int sizeUsersMiddlenameMin = 1;
+    private int sizeUsersBirthdayMin = 8;
+    private int sizeUsersSexMin = 1;
+    private int sizeUsersAddressMin = 1;
+    private int sizeUsersPositionMin = 1;
+    private int sizeUsersDepartmentMin = 1;
+    private int sizeUsersEmailMin = 6;
+    
+    
+    public boolean validateRequest(HttpServletRequest request) {
+        boolean validating = true;      
+
+        accinfoLogin = request.getParameter("accinfoLogin");
+        accinfoPassword = request.getParameter("accinfoPassword");
+
+        agreementsAgr_number = request.getParameter("agreementsAgr_number");
+        agreementsDate_written = request.getParameter("agreementsDate_written");
+        agreementsDate_begin = request.getParameter("agreementsDate_begin");
+        agreementsDate_end = request.getParameter("agreementsDate_end");
+        agreementsDate_pay = request.getParameter("agreementsDate_pay");
+        agreementsSum_pay = request.getParameter("agreementsSum_pay");
+
+        banksName = request.getParameter("banksName");
+        banksMFO = request.getParameter("banksMFO");
+        banksEdrpou = request.getParameter("banksEdrpou");
+        banksAddress = request.getParameter("banksAddress");
+        banksEmail = request.getParameter("banksEmail");
+        banksTelephone = request.getParameter("banksTelephone");
+
+        banks_accountsAcc_number = request.getParameter("banks_accountsAcc_number");
+        banks_accountsCurrency = request.getParameter("banks_accountsCurrency");
+
+        clientsLogin = request.getParameter("clientsLogin");
+        clientsPassword = request.getParameter("clientsPassword");
+        clientsEmail = request.getParameter("clientsEmail");
+        clientsName = request.getParameter("clientsName");
+        clientsMiddlename = request.getParameter("clientsMiddlename");
+        clientsSurname = request.getParameter("clientsSurname");
+        clientsBirthday = request.getParameter("clientsBirthday");
+        clientsSex = request.getParameter("clientsSex");
+        clientsAddress = request.getParameter("clientsAddress");
+        clientsTelephone = request.getParameter("clientsTelephone");
+
+        paymentsPaym_sum = request.getParameter("paymentsPaym_sum");
+        paymentsPaym_purpose = request.getParameter("paymentsPaym_purpose");
+        paymentsPaym_date = request.getParameter("paymentsPaym_date");
+
+        usersName = request.getParameter("usersName");
+        usersSurname = request.getParameter("usersSurname");
+        usersMiddlename = request.getParameter("usersMiddlename");
+        usersBirthday = request.getParameter("usersBirthday");
+        usersSex = request.getParameter("usersSex");
+        usersAddress = request.getParameter("usersAddress");
+        usersPosition = request.getParameter("usersPosition");
+        usersDepartment = request.getParameter("usersDepartment");
+        usersEmail = request.getParameter("usersEmail");
+
+        if (validating && accinfoLogin != null) validating  = (codeAccinfoLogin.equals(stringToCode(accinfoLogin+patternAccinfoLogin)) && accinfoLogin.length() >= sizeAccinfoLoginMin && accinfoLogin.length() <= sizeAccinfoLoginMax) ? true : false;
+        if (validating && accinfoPassword != null) validating  = (codeAccinfoPassword.equals(stringToCode(accinfoPassword+patternAccinfoPassword)) && accinfoPassword.length() >= sizeAccinfoPasswordMin && accinfoPassword.length() <= sizeAccinfoPasswordMax) ? true : false;
+
+        if (validating && agreementsAgr_number != null) validating  = (codeAgreementsAgr_number.equals(stringToCode(agreementsAgr_number+patternAgreementsAgr_number)) && agreementsAgr_number.length() >= sizeAgreementsAgr_numberMin && agreementsAgr_number.length() <= sizeAgreementsAgr_numberMax) ? true : false;
+        if (validating && agreementsDate_written != null) validating  = (codeAgreementsDate_written.equals(stringToCode(agreementsDate_written+patternAgreementsDate_written)) && agreementsDate_written.length() >= sizeAgreementsDate_writtenMin && agreementsDate_written.length() <= sizeAgreementsDate_writtenMax) ? true : false;
+        if (validating && agreementsDate_begin != null) validating  = (codeAgreementsDate_begin.equals(stringToCode(agreementsDate_begin+patternAgreementsDate_begin)) && agreementsDate_begin.length() >= sizeAgreementsDate_beginMin && agreementsDate_begin.length() <= sizeAgreementsDate_beginMax) ? true : false;
+        if (validating && agreementsDate_end != null) validating  = (codeAgreementsDate_end.equals(stringToCode(agreementsDate_end+patternAgreementsDate_end)) && agreementsDate_end.length() >= sizeAgreementsDate_endMin && agreementsDate_end.length() <= sizeAgreementsDate_endMax) ? true : false;
+        if (validating && agreementsDate_pay != null) validating  = (codeAgreementsDate_pay.equals(stringToCode(agreementsDate_pay+patternAgreementsDate_pay)) && agreementsDate_pay.length() >= sizeAgreementsDate_payMin && agreementsDate_pay.length() <= sizeAgreementsDate_payMax) ? true : false;
+        if (validating && agreementsSum_pay != null) validating  = (codeAgreementsSum_pay.equals(stringToCode(agreementsSum_pay+patternAgreementsSum_pay)) && agreementsSum_pay.length() >= sizeAgreementsSum_payMin && agreementsSum_pay.length() <= sizeAgreementsSum_payMax) ? true : false;
+
+        if (validating && banksName != null) validating  = (codeBanksName.equals(stringToCode(banksName+patternBanksName)) && banksName.length() >= sizeBanksNameMin && banksName.length() <= sizeBanksNameMax) ? true : false;
+        if (validating && banksMFO != null) validating  = (codeBanksMFO.equals(stringToCode(banksMFO+patternBanksMFO)) && banksMFO.length() >= sizeBanksMFOMin && banksMFO.length() <= sizeBanksMFOMax) ? true : false;
+        if (validating && banksEdrpou != null) validating  = (codeBanksEdrpou.equals(stringToCode(banksEdrpou+patternBanksEdrpou)) && banksEdrpou.length() >= sizeBanksEdrpouMin && banksEdrpou.length() <= sizeBanksEdrpouMax) ? true : false;
+        if (validating && banksAddress != null) validating  = (codeBanksAddress.equals(stringToCode(banksAddress+patternBanksAddress)) && banksAddress.length() >= sizeBanksAddressMin && banksAddress.length() <= sizeBanksAddressMax) ? true : false;
+        if (validating && banksEmail != null) validating  = (codeBanksEmail.equals(stringToCode(banksEmail+patternBanksEmail)) && banksEmail.length() >= sizeBanksEmailMin && banksEmail.length() <= sizeBanksEmailMax) ? true : false;
+        if (validating && banksTelephone != null) validating  = (codeBanksTelephone.equals(stringToCode(banksTelephone+patternBanksTelephone)) && banksTelephone.length() >= sizeBanksTelephoneMin && banksTelephone.length() <= sizeBanksTelephoneMax) ? true : false;
+
+        if (validating && banks_accountsAcc_number != null) validating  = (codeBanks_accountsAcc_number.equals(stringToCode(banks_accountsAcc_number+patternBanks_accountsAcc_number)) && banks_accountsAcc_number.length() >= sizeBanks_accountsAcc_numberMin && banks_accountsAcc_number.length() <= sizeBanks_accountsAcc_numberMax) ? true : false;
+        if (validating && banks_accountsCurrency != null) validating  = (codeBanks_accountsCurrency.equals(stringToCode(banks_accountsCurrency+patternBanks_accountsCurrency)) && banks_accountsCurrency.length() >= sizeBanks_accountsCurrencyMin && banks_accountsCurrency.length() <= sizeBanks_accountsCurrencyMax) ? true : false;
+
+        if (validating && clientsLogin != null) validating  = (codeClientsLogin.equals(stringToCode(clientsLogin+patternClientsLogin)) && clientsLogin.length() >= sizeClientsLoginMin && clientsLogin.length() <= sizeClientsLoginMax) ? true : false;
+        if (validating && clientsPassword != null) validating  = (codeClientsPassword.equals(stringToCode(clientsPassword+patternClientsPassword)) && clientsPassword.length() >= sizeClientsPasswordMin && clientsPassword.length() <= sizeClientsPasswordMax) ? true : false;
+        if (validating && clientsEmail != null) validating  = (codeClientsEmail.equals(stringToCode(clientsEmail+patternClientsEmail)) && clientsEmail.length() >= sizeClientsEmailMin && clientsEmail.length() <= sizeClientsEmailMax) ? true : false;
+        if (validating && clientsName != null) validating  = (codeClientsName.equals(stringToCode(clientsName+patternClientsName)) && clientsName.length() >= sizeClientsNameMin && clientsName.length() <= sizeClientsNameMax) ? true : false;
+        if (validating && clientsMiddlename != null) validating  = (codeClientsMiddlename.equals(stringToCode(clientsMiddlename+patternClientsMiddlename)) && clientsMiddlename.length() >= sizeClientsMiddlenameMin && clientsMiddlename.length() <= sizeClientsMiddlenameMax) ? true : false;
+        if (validating && clientsSurname != null) validating  = (codeClientsSurname.equals(stringToCode(clientsSurname+patternClientsSurname)) && clientsSurname.length() >= sizeClientsSurnameMin && clientsSurname.length() <= sizeClientsSurnameMax) ? true : false;
+        if (validating && clientsBirthday != null) validating  = (codeClientsBirthday.equals(stringToCode(clientsBirthday+patternClientsBirthday)) && clientsBirthday.length() >= sizeClientsBirthdayMin && clientsBirthday.length() <= sizeClientsBirthdayMax) ? true : false;
+        if (validating && clientsSex != null) validating  = (codeClientsSex.equals(stringToCode(clientsSex+patternClientsSex)) && clientsSex.length() >= sizeClientsSexMin && clientsSex.length() <= sizeClientsSexMax) ? true : false;
+        if (validating && clientsAddress != null) validating  = (codeClientsAddress.equals(stringToCode(clientsAddress+patternClientsAddress)) && clientsAddress.length() >= sizeClientsAddressMin && clientsAddress.length() <= sizeClientsAddressMax) ? true : false;
+        if (validating && clientsTelephone != null) validating  = (codeClientsTelephone.equals(stringToCode(clientsTelephone+patternClientsTelephone)) && clientsTelephone.length() >= sizeClientsTelephoneMin && clientsTelephone.length() <= sizeClientsTelephoneMax) ? true : false;
+
+        if (validating && paymentsPaym_sum != null) validating  = (codePaymentsPaym_sum.equals(stringToCode(paymentsPaym_sum+patternPaymentsPaym_sum)) && paymentsPaym_sum.length() >= sizePaymentsPaym_sumMin && paymentsPaym_sum.length() <= sizePaymentsPaym_sumMax) ? true : false;
+        if (validating && paymentsPaym_purpose != null) validating  = (codePaymentsPaym_purpose.equals(stringToCode(paymentsPaym_purpose+patternPaymentsPaym_purpose)) && paymentsPaym_purpose.length() >= sizePaymentsPaym_purposeMin && paymentsPaym_purpose.length() <= sizePaymentsPaym_purposeMax) ? true : false;
+        if (validating && paymentsPaym_date != null) validating  = (codePaymentsPaym_date.equals(stringToCode(paymentsPaym_date+patternPaymentsPaym_date)) && paymentsPaym_date.length() >= sizePaymentsPaym_dateMin && paymentsPaym_date.length() <= sizePaymentsPaym_dateMax) ? true : false;
+
+        if (validating && usersName != null) validating  = (codeUsersName.equals(stringToCode(usersName+patternUsersName)) && usersName.length() >= sizeUsersNameMin && usersName.length() <= sizeUsersNameMax) ? true : false;
+        if (validating && usersSurname != null) validating  = (codeUsersSurname.equals(stringToCode(usersSurname+patternUsersSurname)) && usersSurname.length() >= sizeUsersSurnameMin && usersSurname.length() <= sizeUsersSurnameMax) ? true : false;
+        if (validating && usersMiddlename != null) validating  = (codeUsersMiddlename.equals(stringToCode(usersMiddlename+patternUsersMiddlename)) && usersMiddlename.length() >= sizeUsersMiddlenameMin && usersMiddlename.length() <= sizeUsersMiddlenameMax) ? true : false;
+        if (validating && usersBirthday != null) validating  = (codeUsersBirthday.equals(stringToCode(usersBirthday+patternUsersBirthday)) && usersBirthday.length() >= sizeUsersBirthdayMin && usersBirthday.length() <= sizeUsersBirthdayMax) ? true : false;
+        if (validating && usersSex != null) validating  = (codeUsersSex.equals(stringToCode(usersSex+patternUsersSex)) && usersSex.length() >= sizeUsersSexMin && usersSex.length() <= sizeUsersSexMax) ? true : false;
+        if (validating && usersAddress != null) validating  = (codeUsersAddress.equals(stringToCode(usersAddress+patternUsersAddress)) && usersAddress.length() >= sizeUsersAddressMin && usersAddress.length() <= sizeUsersAddressMax) ? true : false;
+        if (validating && usersPosition != null) validating  = (codeUsersPosition.equals(stringToCode(usersPosition+patternUsersPosition)) && usersPosition.length() >= sizeUsersPositionMin && usersPosition.length() <= sizeUsersPositionMax) ? true : false;
+        if (validating && usersDepartment != null) validating  = (codeUsersDepartment.equals(stringToCode(usersDepartment+patternUsersDepartment)) && usersDepartment.length() >= sizeUsersDepartmentMin && usersDepartment.length() <= sizeUsersDepartmentMax) ? true : false;
+        if (validating && usersEmail != null) validating  = (codeUsersEmail.equals(stringToCode(usersEmail+patternUsersEmail)) && usersEmail.length() >= sizeUsersEmailMin && usersEmail.length() <= sizeUsersEmailMax) ? true : false;
+
+        return validating;
+    }
+
+    public Client validateClient(HttpServletRequest request, User user) {
+        boolean validating = true;      
+
+        clientsLogin = request.getParameter("clientsLogin");
+        if (validating && clientsLogin == null) validating = false;
+        clientsPassword = request.getParameter("clientsPassword");
+        if (validating && clientsPassword == null) validating = false;
+        clientsEmail = request.getParameter("clientsEmail");
+        if (validating && clientsEmail == null) validating = false;
+        clientsName = request.getParameter("clientsName");
+        if (validating && clientsName == null) validating = false;
+        clientsMiddlename = request.getParameter("clientsMiddlename");
+        if (validating && clientsMiddlename == null) validating = false;
+        clientsSurname = request.getParameter("clientsSurname");
+        if (validating && clientsSurname == null) validating = false;
+        clientsBirthday = request.getParameter("clientsBirthday");
+        if (validating && clientsBirthday == null) validating = false;
+        clientsSex = request.getParameter("clientsSex");
+        if (validating && clientsSex == null) validating = false;
+        clientsAddress = request.getParameter("clientsAddress");
+        if (validating && clientsAddress == null) validating = false;
+        clientsTelephone = request.getParameter("clientsTelephone");
+        if (validating && clientsTelephone == null) validating = false;
+        if (validating && user == null) validating = false;
+
+        if (validating && clientsLogin != null) validating  = (codeClientsLogin.equals(stringToCode(clientsLogin+patternClientsLogin)) && clientsLogin.length() >= sizeClientsLoginMin && clientsLogin.length() <= sizeClientsLoginMax) ? true : false;
+        if (validating && clientsPassword != null) validating  = (codeClientsPassword.equals(stringToCode(clientsPassword+patternClientsPassword)) && clientsPassword.length() >= sizeClientsPasswordMin && clientsPassword.length() <= sizeClientsPasswordMax) ? true : false;
+        if (validating && clientsEmail != null) validating  = (codeClientsEmail.equals(stringToCode(clientsEmail+patternClientsEmail)) && clientsEmail.length() >= sizeClientsEmailMin && clientsEmail.length() <= sizeClientsEmailMax) ? true : false;
+        if (validating && clientsName != null) validating  = (codeClientsName.equals(stringToCode(clientsName+patternClientsName)) && clientsName.length() >= sizeClientsNameMin && clientsName.length() <= sizeClientsNameMax) ? true : false;
+        if (validating && clientsMiddlename != null) validating  = (codeClientsMiddlename.equals(stringToCode(clientsMiddlename+patternClientsMiddlename)) && clientsMiddlename.length() >= sizeClientsMiddlenameMin && clientsMiddlename.length() <= sizeClientsMiddlenameMax) ? true : false;
+        if (validating && clientsSurname != null) validating  = (codeClientsSurname.equals(stringToCode(clientsSurname+patternClientsSurname)) && clientsSurname.length() >= sizeClientsSurnameMin && clientsSurname.length() <= sizeClientsSurnameMax) ? true : false;
+        if (validating && clientsBirthday != null) validating  = (codeClientsBirthday.equals(stringToCode(clientsBirthday+patternClientsBirthday)) && clientsBirthday.length() >= sizeClientsBirthdayMin && clientsBirthday.length() <= sizeClientsBirthdayMax) ? true : false;
+        if (validating && clientsSex != null) validating  = (codeClientsSex.equals(stringToCode(clientsSex+patternClientsSex)) && clientsSex.length() >= sizeClientsSexMin && clientsSex.length() <= sizeClientsSexMax) ? true : false;
+        if (validating && clientsAddress != null) validating  = (codeClientsAddress.equals(stringToCode(clientsAddress+patternClientsAddress)) && clientsAddress.length() >= sizeClientsAddressMin && clientsAddress.length() <= sizeClientsAddressMax) ? true : false;
+        if (validating && clientsTelephone != null) validating  = (codeClientsTelephone.equals(stringToCode(clientsTelephone+patternClientsTelephone)) && clientsTelephone.length() >= sizeClientsTelephoneMin && clientsTelephone.length() <= sizeClientsTelephoneMax) ? true : false;
+
+        if (validating) {
+            Client client = new Client();
+            client.setLogin(clientsLogin);
+            client.setMd5Password(clientsPassword, clientsLogin);
+            client.setEmail(clientsEmail);            
+            client.setName(clientsName);
+            client.setMiddlename(clientsMiddlename);            
+            client.setSurname(clientsSurname);            
+
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            df.setLenient(false);
+            Date datedf = null;
+            try { datedf = df.parse(clientsBirthday); client.setBirthday(datedf);}
+            catch (ParseException ex) {}
+        
+            client.setSex(clientsSex);            
+            client.setAddress(clientsAddress);
+            client.setTelephone(clientsTelephone);            
+            client.setUser(user);            
+            
+            return client;
+        } else {
+            return null;
+        }
+
+    }
+
+    public Agreement validateAgreement(HttpServletRequest request, User user, Client client) {
+        boolean validating = true;      
+
+        agreementsAgr_number = request.getParameter("agreementsAgr_number");
+        if (validating && agreementsAgr_number == null) validating = false;        
+        agreementsDate_written = request.getParameter("agreementsDate_written");
+        if (validating && agreementsDate_written == null) validating = false;                
+        agreementsDate_begin = request.getParameter("agreementsDate_begin");
+        if (validating && agreementsDate_begin == null) validating = false;                
+        agreementsDate_end = request.getParameter("agreementsDate_end");
+        if (validating && agreementsDate_end == null) validating = false;                
+        agreementsDate_pay = request.getParameter("agreementsDate_pay");
+        if (validating && agreementsDate_pay == null) validating = false;                
+        agreementsSum_pay = request.getParameter("agreementsSum_pay");
+        if (validating && agreementsSum_pay == null) validating = false;                
+        if (user == null || client == null) validating = false;
+
+        if (validating && agreementsAgr_number != null) validating  = (codeAgreementsAgr_number.equals(stringToCode(agreementsAgr_number+patternAgreementsAgr_number)) && agreementsAgr_number.length() >= sizeAgreementsAgr_numberMin && agreementsAgr_number.length() <= sizeAgreementsAgr_numberMax) ? true : false;
+        if (validating && agreementsDate_written != null) validating  = (codeAgreementsDate_written.equals(stringToCode(agreementsDate_written+patternAgreementsDate_written)) && agreementsDate_written.length() >= sizeAgreementsDate_writtenMin && agreementsDate_written.length() <= sizeAgreementsDate_writtenMax) ? true : false;
+        if (validating && agreementsDate_begin != null) validating  = (codeAgreementsDate_begin.equals(stringToCode(agreementsDate_begin+patternAgreementsDate_begin)) && agreementsDate_begin.length() >= sizeAgreementsDate_beginMin && agreementsDate_begin.length() <= sizeAgreementsDate_beginMax) ? true : false;
+        if (validating && agreementsDate_end != null) validating  = (codeAgreementsDate_end.equals(stringToCode(agreementsDate_end+patternAgreementsDate_end)) && agreementsDate_end.length() >= sizeAgreementsDate_endMin && agreementsDate_end.length() <= sizeAgreementsDate_endMax) ? true : false;
+        if (validating && agreementsDate_pay != null) validating  = (codeAgreementsDate_pay.equals(stringToCode(agreementsDate_pay+patternAgreementsDate_pay)) && agreementsDate_pay.length() >= sizeAgreementsDate_payMin && agreementsDate_pay.length() <= sizeAgreementsDate_payMax) ? true : false;
+        if (validating && agreementsSum_pay != null) validating  = (codeAgreementsSum_pay.equals(stringToCode(agreementsSum_pay+patternAgreementsSum_pay)) && agreementsSum_pay.length() >= sizeAgreementsSum_payMin && agreementsSum_pay.length() <= sizeAgreementsSum_payMax) ? true : false;        
+        
+        if (validating) {
+            Agreement agreement = new Agreement();
+            agreement.setAgr_number(agreementsAgr_number);
+
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            df.setLenient(false);
+            Date datedf = null;
+            try { 
+                datedf = df.parse(agreementsDate_written);
+                agreement.setDate_written(datedf);
+                datedf = df.parse(agreementsDate_begin);
+                agreement.setDate_begin(datedf);
+                datedf = df.parse(agreementsDate_end);
+                agreement.setDate_end(datedf);
+                datedf = df.parse(agreementsDate_pay);
+                agreement.setDate_pay(datedf);
+                agreement.setSum_pay(Long.valueOf(agreementsSum_pay));
+            }
+            catch (ParseException ex) {}
+
+            agreement.setUser(user);
+            agreement.setClient(client);
+            
+            return agreement;
+        } else {
+            return null;
+        }
+
+    }  
+    
+    private String stringToCode(String passed) {
+        String colon = (passed.indexOf(":")<0) ? "0" : "1";
+        String comma = (passed.indexOf(",")<0) ? "0" : "1";
+        String dblQuotes = (passed.indexOf("\"")<0) ? "0" : "1";
+        String dog = (passed.indexOf("@")<0) ? "0" : "1";
+        String minus = (passed.indexOf("-")<0) ? "0" : "1";
+        String parenthCl = (passed.indexOf(")")<0) ? "0" : "1";
+        String parenthOp = (passed.indexOf("(")<0) ? "0" : "1";
+        String period = (passed.indexOf(".")<0) ? "0" : "1";
+        String semColon = (passed.indexOf(";")<0) ? "0" : "1";
+        String sex = !Pattern.matches("[mf]", passed) ? "0" : "1";
+        String slash = (passed.indexOf("/")<0) ? "0" : "1";        
+        String snglQuotes = (passed.indexOf("'")<0) ? "0" : "1";
+        String space = (passed.indexOf(" ")<0) ? "0" : "1";
+        String underscore = (passed.indexOf("_")<0) ? "0" : "1";
+        String digit = !Pattern.matches(".*[0-9].*", passed) ? "0" : "1";
+        String word = !Pattern.matches(".*[a-zA-Z].*", passed) ? "0" : "1";
+        String wordUpCase = !Pattern.matches(".*[A-Z].*", passed) ? "0" : "1";
+        String wordLoCase = !Pattern.matches(".*[a-z].*", passed) ? "0" : "1";        
+        String date;
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        df.setLenient(false);
+        Date datedf = null;
+        try {
+            Date dateMin = df.parse("1910-01-01");
+            Date dateMax = df.parse("2013-01-01");
+            datedf = df.parse(passed);
+            if (datedf.before(dateMax) && datedf.after(dateMin)) date = "1";
+            else date = "0";
+        }
+        catch (ParseException ex) {date = "0";}
+        String lng = "";
+        try { long tryLong = Long.valueOf(passed); lng = "1"; }
+        catch (NumberFormatException ex) { lng = "0";}
+        String answer = colon + comma + dblQuotes + dog + minus + parenthCl + parenthOp + period + semColon + sex + slash + snglQuotes + space + underscore + digit + word + wordUpCase + wordLoCase + date + lng;
+        debugInfo += "---" + answer;
+        return answer;
+    }
+
+    public String getAccinfoLogin() {
+        return accinfoLogin;
+    }
+
+    public void setAccinfoLogin(String accinfoLogin) {
+        this.accinfoLogin = accinfoLogin;
+    }
+
+    public String getAccinfoPassword() {
+        return accinfoPassword;
+    }
+
+    public void setAccinfoPassword(String accinfoPassword) {
+        this.accinfoPassword = accinfoPassword;
+    }
+
+    public String getAgreementsAgr_number() {
+        return agreementsAgr_number;
+    }
+
+    public void setAgreementsAgr_number(String agreementsAgr_number) {
+        this.agreementsAgr_number = agreementsAgr_number;
+    }
+
+    public String getAgreementsDate_written() {
+        return agreementsDate_written;
+    }
+
+    public void setAgreementsDate_written(String agreementsDate_written) {
+        this.agreementsDate_written = agreementsDate_written;
+    }
+
+    public String getAgreementsDate_begin() {
+        return agreementsDate_begin;
+    }
+
+    public void setAgreementsDate_begin(String agreementsDate_begin) {
+        this.agreementsDate_begin = agreementsDate_begin;
+    }
+
+    public String getAgreementsDate_end() {
+        return agreementsDate_end;
+    }
+
+    public void setAgreementsDate_end(String agreementsDate_end) {
+        this.agreementsDate_end = agreementsDate_end;
+    }
+
+    public String getAgreementsDate_pay() {
+        return agreementsDate_pay;
+    }
+
+    public void setAgreementsDate_pay(String agreementsDate_pay) {
+        this.agreementsDate_pay = agreementsDate_pay;
+    }
+
+    public String getAgreementsSum_pay() {
+        return agreementsSum_pay;
+    }
+
+    public void setAgreementsSum_pay(String agreementsSum_pay) {
+        this.agreementsSum_pay = agreementsSum_pay;
+    }
+
+    public String getBanksName() {
+        return banksName;
+    }
+
+    public void setBanksName(String banksName) {
+        this.banksName = banksName;
+    }
+
+    public String getBanksMFO() {
+        return banksMFO;
+    }
+
+    public void setBanksMFO(String banksMFO) {
+        this.banksMFO = banksMFO;
+    }
+
+    public String getBanksEdrpou() {
+        return banksEdrpou;
+    }
+
+    public void setBanksEdrpou(String banksEdrpou) {
+        this.banksEdrpou = banksEdrpou;
+    }
+
+    public String getBanksAddress() {
+        return banksAddress;
+    }
+
+    public void setBanksAddress(String banksAddress) {
+        this.banksAddress = banksAddress;
+    }
+
+    public String getBanksEmail() {
+        return banksEmail;
+    }
+
+    public void setBanksEmail(String banksEmail) {
+        this.banksEmail = banksEmail;
+    }
+
+    public String getBanksTelephone() {
+        return banksTelephone;
+    }
+
+    public void setBanksTelephone(String banksTelephone) {
+        this.banksTelephone = banksTelephone;
+    }
+
+    public String getBanks_accountsAcc_number() {
+        return banks_accountsAcc_number;
+    }
+
+    public void setBanks_accountsAcc_number(String banks_accountsAcc_number) {
+        this.banks_accountsAcc_number = banks_accountsAcc_number;
+    }
+
+    public String getBanks_accountsCurrency() {
+        return banks_accountsCurrency;
+    }
+
+    public void setBanks_accountsCurrency(String banks_accountsCurrency) {
+        this.banks_accountsCurrency = banks_accountsCurrency;
+    }
+
+    public String getClientsLogin() {
+        return clientsLogin;
+    }
+
+    public void setClientsLogin(String clientsLogin) {
+        this.clientsLogin = clientsLogin;
+    }
+
+    public String getClientsPassword() {
+        return clientsPassword;
+    }
+
+    public void setClientsPassword(String clientsPassword) {
+        this.clientsPassword = clientsPassword;
+    }
+
+    public String getClientsEmail() {
+        return clientsEmail;
+    }
+
+    public void setClientsEmail(String clientsEmail) {
+        this.clientsEmail = clientsEmail;
+    }
+
+    public String getClientsName() {
+        return clientsName;
+    }
+
+    public void setClientsName(String clientsName) {
+        this.clientsName = clientsName;
+    }
+
+    public String getClientsMiddlename() {
+        return clientsMiddlename;
+    }
+
+    public void setClientsMiddlename(String clientsMiddlename) {
+        this.clientsMiddlename = clientsMiddlename;
+    }
+
+    public String getClientsSurname() {
+        return clientsSurname;
+    }
+
+    public void setClientsSurname(String clientsSurname) {
+        this.clientsSurname = clientsSurname;
+    }
+
+    public String getClientsBirthday() {
+        return clientsBirthday;
+    }
+
+    public void setClientsBirthday(String clientsBirthday) {
+        this.clientsBirthday = clientsBirthday;
+    }
+
+    public String getClientsSex() {
+        return clientsSex;
+    }
+
+    public void setClientsSex(String clientsSex) {
+        this.clientsSex = clientsSex;
+    }
+
+    public String getClientsAddress() {
+        return clientsAddress;
+    }
+
+    public void setClientsAddress(String clientsAddress) {
+        this.clientsAddress = clientsAddress;
+    }
+
+    public String getClientsTelephone() {
+        return clientsTelephone;
+    }
+
+    public void setClientsTelephone(String clientsTelephone) {
+        this.clientsTelephone = clientsTelephone;
+    }
+
+    public String getPaymentsPaym_sum() {
+        return paymentsPaym_sum;
+    }
+
+    public void setPaymentsPaym_sum(String paymentsPaym_sum) {
+        this.paymentsPaym_sum = paymentsPaym_sum;
+    }
+
+    public String getPaymentsPaym_purpose() {
+        return paymentsPaym_purpose;
+    }
+
+    public void setPaymentsPaym_purpose(String paymentsPaym_purpose) {
+        this.paymentsPaym_purpose = paymentsPaym_purpose;
+    }
+
+    public String getPaymentsPaym_date() {
+        return paymentsPaym_date;
+    }
+
+    public void setPaymentsPaym_date(String paymentsPaym_date) {
+        this.paymentsPaym_date = paymentsPaym_date;
+    }
+
+    public String getUsersName() {
+        return usersName;
+    }
+
+    public void setUsersName(String usersName) {
+        this.usersName = usersName;
+    }
+
+    public String getUsersSurname() {
+        return usersSurname;
+    }
+
+    public void setUsersSurname(String usersSurname) {
+        this.usersSurname = usersSurname;
+    }
+
+    public String getUsersMiddlename() {
+        return usersMiddlename;
+    }
+
+    public void setUsersMiddlename(String usersMiddlename) {
+        this.usersMiddlename = usersMiddlename;
+    }
+
+    public String getUsersBirthday() {
+        return usersBirthday;
+    }
+
+    public void setUsersBirthday(String usersBirthday) {
+        this.usersBirthday = usersBirthday;
+    }
+
+    public String getUsersSex() {
+        return usersSex;
+    }
+
+    public void setUsersSex(String usersSex) {
+        this.usersSex = usersSex;
+    }
+
+    public String getUsersAddress() {
+        return usersAddress;
+    }
+
+    public void setUsersAddress(String usersAddress) {
+        this.usersAddress = usersAddress;
+    }
+
+    public String getUsersPosition() {
+        return usersPosition;
+    }
+
+    public void setUsersPosition(String usersPosition) {
+        this.usersPosition = usersPosition;
+    }
+
+    public String getUsersDepartment() {
+        return usersDepartment;
+    }
+
+    public void setUsersDepartment(String usersDepartment) {
+        this.usersDepartment = usersDepartment;
+    }
+
+    public String getUsersEmail() {
+        return usersEmail;
+    }
+
+    public void setUsersEmail(String usersEmail) {
+        this.usersEmail = usersEmail;
+    }
+
+    public String getDebugInfo() {
+        return debugInfo;
+    }    
+
+}

@@ -1,0 +1,450 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package crmdb;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.Pattern;
+
+/**
+ *
+ * @author TempRDP2
+ */
+public class Validator {
+
+    private String accinfoLogin;
+    private String accinfoPassword;
+    
+    private String agreementsAgr_number;
+    private String agreementsDate_written;
+    private String agreementsDate_begin;
+    private String agreementsDate_end;
+    private String agreementsDate_pay;
+    private String agreementsSum_pay;
+    
+    private String banksName;
+    private String banksMFO;
+    private String banksEdrpou;
+    private String banksAddress;
+    private String banksEmail;
+    private String banksTelephone;
+
+    private String banks_accountsAcc_number;    
+    private String banks_accountsCurrency;
+
+    private String clientsLogin;
+    private String clientsPassword;    
+    private String clientsEmail;    
+    private String clientsName;    
+    private String clientsMiddlename;
+    private String clientsSurname;
+    private String clientsBirthday;
+    private String clientsSex;    
+    private String clientsAddress;
+    private String clientsTelephone;
+    
+    private String paymentsPaym_sum;
+    private String paymentsPaym_purpose;
+    private String paymentsPaym_date;
+
+    private String usersName;
+    private String usersSurname;    
+    private String usersMiddlename;
+    private String usersBirthday;
+    private String usersSex;
+    private String usersAddress;
+    private String usersPosition;    
+    private String usersDepartment;
+    private String usersEmail;    
+   
+    private String codeAccinfoLogin = "00001001000001110100";
+    private String codeAccinfoPassword = "00000000000000111100";
+
+    private String codeAgreementsAgr_number = "00001000000000111000";
+    private String codeAgreementsDate_written = "00001000000000100010";
+    private String codeAgreementsDate_begin = "00001000000000100010";
+    private String codeAgreementsDate_end = "00001000000000100010";
+    private String codeAgreementsDate_pay = "00001000000000100010";
+    private String codeAgreementsSum_pay = "00000000000000100001";
+    
+    private String codeBanksName = "10101110000010110100";
+    private String codeBanksMFO = "00000000000000100001";
+    private String codeBanksEdrpou = "00000000000000100001";
+    private String codeBanksAddress = "11001001101110111100";
+    private String codeBanksEmail = "00011001000001111100";
+    private String codeBanksTelephone = "00001000000000100000";
+    
+    private String codeBanks_accountsAcc_number = "11001111001001111100";
+    private String codeBanks_accountsCurrency = "00000000000000011000";
+    
+    private String codeClientsLogin = "00001001000001110100";
+    private String codeClientsPassword = "00000000000000111100";
+    private String codeClientsEmail = "00011001000001111100";
+    private String codeClientsName = "00000000000000011100";
+    private String codeClientsMiddlename = "00000000000000011100";
+    private String codeClientsSurname = "00000000000000011100";
+    private String codeClientsBirthday = "00001000000000100010";
+    private String codeClientsSex = "00000000010000010100";
+    private String codeClientsAddress = "11001001101100111100";
+    private String codeClientsTelephone = "00001000000000100000";
+    
+    private String codePaymentsPaym_sum = "00000000000000100001";
+    private String codePaymentsPaym_purpose = "11101111100101111100";
+    private String codePaymentsPaym_date = "00001000000000100010";
+    
+    private String codeUsersName = "00000000000000011100";
+    private String codeUsersSurname = "00000000000000011100";
+    private String codeUsersMiddlename = "00000000000000011100";
+    private String codeUsersBirthday = "00001000000000100010";
+    private String codeUsersSex = "00000000010000010100";
+    private String codeUsersAddress = "11001001101100111100";
+    private String codeUsersPosition = "00000000000000111100";
+    private String codeUsersDepartment = "00000000000000111100";
+    private String codeUsersEmail = "00011001000001111100";    
+    
+    public boolean validate() {
+        return true;
+    }
+    
+    private String stringToCode(String passed) {
+        String colon = (passed.indexOf(":")<0) ? "0" : "1";
+        String comma = (passed.indexOf(",")<0) ? "0" : "1";
+        String dblQuotes = (passed.indexOf("\"")<0) ? "0" : "1";
+        String dog = (passed.indexOf("@")<0) ? "0" : "1";
+        String minus = (passed.indexOf("-")<0) ? "0" : "1";
+        String parenthCl = (passed.indexOf(")")<0) ? "0" : "1";
+        String parenthOp = (passed.indexOf("(")<0) ? "0" : "1";
+        String period = (passed.indexOf(".")<0) ? "0" : "1";
+        String semColon = (passed.indexOf(";")<0) ? "0" : "1";
+        String sex = !Pattern.matches("[a-z]", passed) ? "0" : "1";
+        String slash = (passed.indexOf("/")<0) ? "0" : "1";        
+        String snglQuotes = (passed.indexOf("'")<0) ? "0" : "1";
+        String space = (passed.indexOf(" ")<0) ? "0" : "1";
+        String underscore = (passed.indexOf("_")<0) ? "0" : "1";
+        String digit = !Pattern.matches(".*[0-9].*", passed) ? "0" : "1";
+        String word = !Pattern.matches(".*[a-zA-Z].*", passed) ? "0" : "1";
+        String wordUpCase = !Pattern.matches(".*[A-Z].*", passed) ? "0" : "1";
+        String wordLoCase = !Pattern.matches(".*[a-z].*", passed) ? "0" : "1";        
+        String date;
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        df.setLenient(false);
+        Date datedf = null;
+        try {datedf = df.parse(passed);date = "1";}
+        catch (ParseException ex) {date = "0";}
+        String lng = "";
+        try { long tryLong = Long.valueOf(passed); lng = "1"; }
+        catch (NumberFormatException ex) { lng = "0";}
+        String answer = colon + comma + dblQuotes + dog + minus + parenthCl + parenthOp + period + semColon + sex + slash + snglQuotes + space + underscore + digit + word + wordUpCase + wordLoCase + date + lng;
+        return answer;
+    }
+
+    public String getAccinfoLogin() {
+        return accinfoLogin;
+    }
+
+    public void setAccinfoLogin(String accinfoLogin) {
+        this.accinfoLogin = accinfoLogin;
+    }
+
+    public String getAccinfoPassword() {
+        return accinfoPassword;
+    }
+
+    public void setAccinfoPassword(String accinfoPassword) {
+        this.accinfoPassword = accinfoPassword;
+    }
+
+    public String getAgreementsAgr_number() {
+        return agreementsAgr_number;
+    }
+
+    public void setAgreementsAgr_number(String agreementsAgr_number) {
+        this.agreementsAgr_number = agreementsAgr_number;
+    }
+
+    public String getAgreementsDate_written() {
+        return agreementsDate_written;
+    }
+
+    public void setAgreementsDate_written(String agreementsDate_written) {
+        this.agreementsDate_written = agreementsDate_written;
+    }
+
+    public String getAgreementsDate_begin() {
+        return agreementsDate_begin;
+    }
+
+    public void setAgreementsDate_begin(String agreementsDate_begin) {
+        this.agreementsDate_begin = agreementsDate_begin;
+    }
+
+    public String getAgreementsDate_end() {
+        return agreementsDate_end;
+    }
+
+    public void setAgreementsDate_end(String agreementsDate_end) {
+        this.agreementsDate_end = agreementsDate_end;
+    }
+
+    public String getAgreementsDate_pay() {
+        return agreementsDate_pay;
+    }
+
+    public void setAgreementsDate_pay(String agreementsDate_pay) {
+        this.agreementsDate_pay = agreementsDate_pay;
+    }
+
+    public String getAgreementsSum_pay() {
+        return agreementsSum_pay;
+    }
+
+    public void setAgreementsSum_pay(String agreementsSum_pay) {
+        this.agreementsSum_pay = agreementsSum_pay;
+    }
+
+    public String getBanksName() {
+        return banksName;
+    }
+
+    public void setBanksName(String banksName) {
+        this.banksName = banksName;
+    }
+
+    public String getBanksMFO() {
+        return banksMFO;
+    }
+
+    public void setBanksMFO(String banksMFO) {
+        this.banksMFO = banksMFO;
+    }
+
+    public String getBanksEdrpou() {
+        return banksEdrpou;
+    }
+
+    public void setBanksEdrpou(String banksEdrpou) {
+        this.banksEdrpou = banksEdrpou;
+    }
+
+    public String getBanksAddress() {
+        return banksAddress;
+    }
+
+    public void setBanksAddress(String banksAddress) {
+        this.banksAddress = banksAddress;
+    }
+
+    public String getBanksEmail() {
+        return banksEmail;
+    }
+
+    public void setBanksEmail(String banksEmail) {
+        this.banksEmail = banksEmail;
+    }
+
+    public String getBanksTelephone() {
+        return banksTelephone;
+    }
+
+    public void setBanksTelephone(String banksTelephone) {
+        this.banksTelephone = banksTelephone;
+    }
+
+    public String getBanks_accountsAcc_number() {
+        return banks_accountsAcc_number;
+    }
+
+    public void setBanks_accountsAcc_number(String banks_accountsAcc_number) {
+        this.banks_accountsAcc_number = banks_accountsAcc_number;
+    }
+
+    public String getBanks_accountsCurrency() {
+        return banks_accountsCurrency;
+    }
+
+    public void setBanks_accountsCurrency(String banks_accountsCurrency) {
+        this.banks_accountsCurrency = banks_accountsCurrency;
+    }
+
+    public String getClientsLogin() {
+        return clientsLogin;
+    }
+
+    public void setClientsLogin(String clientsLogin) {
+        this.clientsLogin = clientsLogin;
+    }
+
+    public String getClientsPassword() {
+        return clientsPassword;
+    }
+
+    public void setClientsPassword(String clientsPassword) {
+        this.clientsPassword = clientsPassword;
+    }
+
+    public String getClientsEmail() {
+        return clientsEmail;
+    }
+
+    public void setClientsEmail(String clientsEmail) {
+        this.clientsEmail = clientsEmail;
+    }
+
+    public String getClientsName() {
+        return clientsName;
+    }
+
+    public void setClientsName(String clientsName) {
+        this.clientsName = clientsName;
+    }
+
+    public String getClientsMiddlename() {
+        return clientsMiddlename;
+    }
+
+    public void setClientsMiddlename(String clientsMiddlename) {
+        this.clientsMiddlename = clientsMiddlename;
+    }
+
+    public String getClientsSurname() {
+        return clientsSurname;
+    }
+
+    public void setClientsSurname(String clientsSurname) {
+        this.clientsSurname = clientsSurname;
+    }
+
+    public String getClientsBirthday() {
+        return clientsBirthday;
+    }
+
+    public void setClientsBirthday(String clientsBirthday) {
+        this.clientsBirthday = clientsBirthday;
+    }
+
+    public String getClientsSex() {
+        return clientsSex;
+    }
+
+    public void setClientsSex(String clientsSex) {
+        this.clientsSex = clientsSex;
+    }
+
+    public String getClientsAddress() {
+        return clientsAddress;
+    }
+
+    public void setClientsAddress(String clientsAddress) {
+        this.clientsAddress = clientsAddress;
+    }
+
+    public String getClientsTelephone() {
+        return clientsTelephone;
+    }
+
+    public void setClientsTelephone(String clientsTelephone) {
+        this.clientsTelephone = clientsTelephone;
+    }
+
+    public String getPaymentsPaym_sum() {
+        return paymentsPaym_sum;
+    }
+
+    public void setPaymentsPaym_sum(String paymentsPaym_sum) {
+        this.paymentsPaym_sum = paymentsPaym_sum;
+    }
+
+    public String getPaymentsPaym_purpose() {
+        return paymentsPaym_purpose;
+    }
+
+    public void setPaymentsPaym_purpose(String paymentsPaym_purpose) {
+        this.paymentsPaym_purpose = paymentsPaym_purpose;
+    }
+
+    public String getPaymentsPaym_date() {
+        return paymentsPaym_date;
+    }
+
+    public void setPaymentsPaym_date(String paymentsPaym_date) {
+        this.paymentsPaym_date = paymentsPaym_date;
+    }
+
+    public String getUsersName() {
+        return usersName;
+    }
+
+    public void setUsersName(String usersName) {
+        this.usersName = usersName;
+    }
+
+    public String getUsersSurname() {
+        return usersSurname;
+    }
+
+    public void setUsersSurname(String usersSurname) {
+        this.usersSurname = usersSurname;
+    }
+
+    public String getUsersMiddlename() {
+        return usersMiddlename;
+    }
+
+    public void setUsersMiddlename(String usersMiddlename) {
+        this.usersMiddlename = usersMiddlename;
+    }
+
+    public String getUsersBirthday() {
+        return usersBirthday;
+    }
+
+    public void setUsersBirthday(String usersBirthday) {
+        this.usersBirthday = usersBirthday;
+    }
+
+    public String getUsersSex() {
+        return usersSex;
+    }
+
+    public void setUsersSex(String usersSex) {
+        this.usersSex = usersSex;
+    }
+
+    public String getUsersAddress() {
+        return usersAddress;
+    }
+
+    public void setUsersAddress(String usersAddress) {
+        this.usersAddress = usersAddress;
+    }
+
+    public String getUsersPosition() {
+        return usersPosition;
+    }
+
+    public void setUsersPosition(String usersPosition) {
+        this.usersPosition = usersPosition;
+    }
+
+    public String getUsersDepartment() {
+        return usersDepartment;
+    }
+
+    public void setUsersDepartment(String usersDepartment) {
+        this.usersDepartment = usersDepartment;
+    }
+
+    public String getUsersEmail() {
+        return usersEmail;
+    }
+
+    public void setUsersEmail(String usersEmail) {
+        this.usersEmail = usersEmail;
+    }
+
+
+}

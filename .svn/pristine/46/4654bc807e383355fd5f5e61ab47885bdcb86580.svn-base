@@ -1,0 +1,72 @@
+/* 
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+            function logoutUser() {
+                var btn = $("#logoutButton");
+                $.ajax({ url: "LogoutServlet",
+                    success : function(text){
+                        response = text;
+                        if (response == "success") {
+                            $(location).attr("href","index.jsp");
+                        } else {
+                            $("#logoutButton").innerHtml = "Failed!"
+                        }
+                    },
+                    fail: function() { $("#logoutButton").innerHtml = "Failed!" }
+                });                            
+            }
+        function updateMyInfoTable() {
+            $.ajax({ url: "GetUserServlet",
+                success : function(text){
+                    response = text;
+                    if (response == "failure") {
+                        $(location).attr("href","index.jsp");
+                    } else {
+                        var jsonGot = JSON.parse(response);
+                        document.getElementById("fieldName").value = jsonGot.name;
+                        document.getElementById("fieldSurname").value = jsonGot.surname;
+                        document.getElementById("fieldMiddlename").value = jsonGot.middlename;
+                        document.getElementById("fieldDepartment").value = jsonGot.department;
+                        document.getElementById("fieldPosition").value = jsonGot.position;
+                        document.getElementById("fieldAddress").value = jsonGot.address;
+                        document.getElementById("fieldBirthday").value = jsonGot.birthday;
+                        document.getElementById("fieldEmail").value = jsonGot.email;
+                        document.getElementById("fieldGender").value = jsonGot.sex;
+                    }
+                },
+                fail: function() { $(location).attr("href","index.jsp") }
+                });
+
+        }
+            function makeClientsFormElement(jsonGot) {
+                $("#contentPlace").load("elementsus.html #clientsUserAll", function() {makeClientsFormElementP2(jsonGot);});
+            }
+            function makeClientsFormElementP2(jsonGot) {
+                for (j=0; j <jsonGot.length; j++) {
+                    var newRow = document.createElement("tr");
+                    newRow.setAttribute("id", "rowNumber" + j)
+                    var cell1 = document.createElement("td");
+                    cell1.innerHTML = jsonGot[j].name+" "+jsonGot[j].middlename+" "+jsonGot[j].surname;
+                    var cell2 = document.createElement("td");
+                    cell2.innerHTML = jsonGot[j].address;
+                    var cell3 = document.createElement("td");
+                    cell3.innerHTML = jsonGot[j].telephone;
+                    var cell4 = document.createElement("td");
+                    cell4.innerHTML = jsonGot[j].email;
+                    var cell5 = document.createElement("td");
+                    cell5.innerHTML = jsonGot[j].login;
+                    var cell6 = document.createElement("td");
+                    cell6.innerHTML = jsonGot[j].birthday;
+                    newRow.appendChild(cell1);
+                    newRow.appendChild(cell2);                    
+                    newRow.appendChild(cell3);
+                    newRow.appendChild(cell4);
+                    newRow.appendChild(cell5);
+                    newRow.appendChild(cell6);                    
+                    document.getElementById("clientsUserAllTBody").appendChild(newRow);
+                }
+            }
+            function searchClientByName() {
+                
+            }

@@ -1,0 +1,104 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="CSS/bootstrap.css" rel="stylesheet">
+        <link href="CSS/bootstrap-responsive.css" rel="stylesheet">
+        <script src="JS/jquery.js"></script>
+        <script src="JS/bootstrap.js"></script>
+        <script src="JS/javascriptclient.js"></script>        
+        <script>
+            function loadInnerContent() {
+                $("#headerofpage").load("headerofpage.html");
+                $.ajax({
+                    url: 'CheckClientLoggedInServlet',
+                    success : function(text){
+                        responsestate = text.substring(0,7);
+                        response = text.substring(7);
+                        console.log(responsestate+"  " + response);
+                        if (responsestate == "success") {
+                            console.log(responsestate+"  " + response);
+                            document.getElementById("replyField").innerHTML = "<h6>" + response + "</h6> <label></label> ";
+                        } else {
+                            console.log("no client found redirecting back");
+                            $(location).attr("href","index.jsp");
+                        }
+                    }
+                });            
+                window.setTimeout("setActive()", 500);
+            }
+            function setActive() {
+                $("#homemenu").addClass("active");
+            }
+            function logoutClient() {
+                var btn = $("#logoutButton");
+                btn.button("loading");
+                $.ajax({ url: "LogoutServlet",
+                    success : function(text){
+                        response = text;
+                        if (response == "success") {
+                            $(location).attr("href","index.jsp");
+                        } else {
+                            $("#logoutButton").innerHtml = "Logout failed!"
+                        }
+                    },
+                    fail: function() { $("#logoutButton").innerHtml = "Logout failed!" }
+                });                            
+            }
+            function clickbtn() {
+                console.log("---------clicked-----------");
+            }
+            function leftHelpMenuPressed() {
+                $("#contentPlace").load("elementscl.html #helptext");
+                removeAllMenuClasses();
+                $("#leftHelpMenu").addClass("active");
+            }
+            function leftMyInfoMenuPressed() {
+                $("#contentPlace").load("elementscl.html #myInfoClient", function() {
+                    updateTable();
+                });
+                removeAllMenuClasses();
+                $("#leftMyInfoMenu").addClass("active");
+            }
+            function removeAllMenuClasses() {
+            $("#leftHomeMenu").removeClass("active");
+            $("#leftAgreementsMenu").removeClass("active");
+            $("#leftPaymentsMenu").removeClass("active");
+            $("#leftMyInfoMenu").removeClass("active");
+            $("#leftHelpMenu").removeClass("active");
+            }
+        </script>
+
+    </head>
+    <body onload="loadInnerContent()">
+        <div id="headerofpage">
+        </div>
+
+        <div class="row-fluid">
+            <div class="span2" id="leftColumn">
+                <ul class="nav nav-list">
+                    <li class="active" id="leftHomeMenu"><a href="contentcl.html">Home</a></li>
+                    <li class="nav-header">MY DOCUMENTS</li>
+                    <li onclick="clickbtn()" id="leftAgreementsMenu">Agreements</li>
+                    <li onclick="clickbtn()" id="leftPaymentsMenu">Payments</li>
+                    <li class="nav-header">PERSONAL INFO</li>
+                    <li onclick="leftMyInfoMenuPressed()" id="leftMyInfoMenu"><a href="contentcl.html#">My info</a></li>
+                    <li onclick="leftHelpMenuPressed()" id="leftHelpMenu"><a href="contentcl.html#">Help</a></li>
+                </ul>
+            </div>
+            <div class="span8" id="centerColumn">
+                <div id="contentPlace"> </div>
+
+            </div>
+            <div class="span2" id="rightColumn">
+                <div id="replyField"></div>
+                <button class="btn btn-primary" type="button" id="logoutButton" onclick="logoutClient()" data-loading-text="Exiting...">Logout</button>
+            </div>
+        </div>
+    </body>
+</html>

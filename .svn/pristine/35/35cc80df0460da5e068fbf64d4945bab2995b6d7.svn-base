@@ -1,0 +1,112 @@
+<div id ="homeText">
+<h2> Hello! </h2>
+
+            <p> This is a starting page of client management part of CRM.</p>
+            <p> The client can view his  agreements by pressing "Agreements" menu, or check his payments by pressing "Payments"</p>
+            <p> Also the client can view his personal info by clicking "My info" menu or view help page by selecting "Help"</p>
+</div>
+<div id ="helpText">
+<h2> Help </h2>
+
+            <p> This is client help page of a demo of simple CRM.</p>
+            <p> The client can view his agreements by pressing "Agreements" menu, or check his payments by pressing "Payments"</p>
+            <p> Also the client can view his personal info by clicking "My info" menu or view this page by selecting "Help"</p>
+</div>
+<div id="myInfoClient">
+    
+    <h2>Your personal info:</h2>
+
+    <form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" for="fieldName">Name</label>
+        <div class="controls">
+            <input type="text" id="fieldName" value="Name" disabled>
+        </div>
+    </div>
+
+        <div class="control-group">
+            <label class="control-label" for="fieldSurname">Surname</label>
+            <div class="controls">
+                <input type="text" id="fieldSurname" value="Surname" disabled>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="fieldMiddlename">Middle name</label>
+            <div class="controls">
+                <input type="text" id="fieldMiddlename" value="Middlename" disabled>
+            </div>
+        </div>        
+
+        <div class="control-group">
+            <label class="control-label" for="birthday">Birthday</label>
+            <div class="controls">
+                <input type="date" id="fieldBirthday" value="2012-11-11" disabled>
+            </div>
+        </div>        
+
+        <div class="control-group">
+            <label class="control-label" for="fieldAddress">Address</label>
+            <div class="controls">
+                <input type="text" id="fieldAddress" value="Address" disabled>
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label class="control-label" for="fieldTelephone">Telephone</label>
+            <div class="controls">
+                <input type="text" id="fieldTelephone" value="Telephone" disabled>
+            </div>
+        </div>                
+
+        <div class="control-group">
+            <label class="control-label" for="fieldEmail">Email</label>
+            <div class="controls">
+                <input type="text" id="fieldEmail" value="Email" disabled>
+            </div>
+        </div>                        
+        
+        <div class="control-group">
+            <label class="control-label" for="fieldGender">Gender</label>
+            <div class="controls">
+                <input type="text" id="fieldGender" value="Gender" disabled>
+            </div>
+        </div>        
+    </form>
+</div>
+<div id="paymentsClient">
+    
+</div>
+<div id="paymentsClientAll">
+    <h2> All your payments: </h2>
+<table class="table table-striped">
+  <thead>
+      <tr>
+          <th>Date</th>
+          <th>Sum</th>
+          <th>Sum purpose</th>
+          <th>More</th>                                          
+      </tr>
+  </thead>   
+  <tbody id="paymentsClientAllTBody">
+
+  </tbody>
+</table>
+</div>
+
+<div id="agreementsClientAll">
+    <h2> All your agreements: </h2>
+<table class="table table-striped">
+  <thead>
+      <tr>
+          <th>Agreement #</th>
+          <th>Date</th>
+          <th>Sum</th>
+          <th>Paym. date</th>
+          <th>More</th>
+      </tr>
+  </thead>   
+  <tbody id="agreementsClientAllTBody">
+  </tbody>
+</table>
+</div>

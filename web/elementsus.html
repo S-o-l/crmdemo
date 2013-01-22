@@ -1,0 +1,494 @@
+<div id ="homeText">
+    <h2> Hello! </h2>
+    <p> This is a starting page of user management part of CRM.</p>
+    <p> The user can view his clients, agreements and payments made by his clients. He can add/remove clients or agreements and attach/detach existing payments to it.</p>
+    <p> He also can check existing banks and its accounts.</p>
+</div>
+<div id ="helpText">
+    <h2> Help </h2>
+    <p> This is user help page of a demo of simple CRM.</p>
+    <p> Under collapsible menu "Clients" the user can view his clients by pressing "View clients", add clients or remove them (only if they don't have any connected documents or SQL cascading on delete (restrict) will forbid to make such operation and report error to user).</p>
+    <p> Under menu "Agreements" and "Payments" user can view, add, remove agreements and attach/detach payments in same way as clients.</p>
+    <p> In menu "Bank" user can check info on existing bank accounts, user can also view this page by selecting "Help"</p>
+</div>
+<div id="myInfoClient">
+    <h2>Your personal info:</h2>
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="fieldName">Name</label>
+            <div class="controls">
+                <input type="text" id="fieldName" value="Name" disabled>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="fieldSurname">Surname</label>
+            <div class="controls">
+                <input type="text" id="fieldSurname" value="Surname" disabled>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="fieldMiddlename">Middle name</label>
+            <div class="controls">
+                <input type="text" id="fieldMiddlename" value="Middlename" disabled>
+            </div>
+        </div>        
+        <div class="control-group">
+            <label class="control-label" for="department">Department</label>
+            <div class="controls">
+                <input type="text" id="fieldDepartment" value="Department" disabled>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="position">Position</label>
+            <div class="controls">
+                <input type="text" id="fieldPosition" value="Position" disabled>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="birthday">Birthday</label>
+            <div class="controls">
+                <input type="date" id="fieldBirthday" value="2012-11-11" disabled>
+            </div>
+        </div>        
+        <div class="control-group">
+            <label class="control-label" for="fieldAddress">Address</label>
+            <div class="controls">
+                <input type="text" id="fieldAddress" value="Address" disabled>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="fieldEmail">Email</label>
+            <div class="controls">
+                <input type="text" id="fieldEmail" value="Email" disabled>
+            </div>
+        </div>                        
+        <div class="control-group">
+            <label class="control-label" for="fieldGender">Gender</label>
+            <div class="controls">
+                <input type="text" id="fieldGender" value="Gender" disabled>
+            </div>
+        </div>        
+    </form>
+</div>
+<div id="clientsUserAll">
+    <div id="searchPanel" class="row-fluid collapse">
+        <form class="form-inline">
+            <input onkeyup="searchClientKeyPressed()" id="searchClientByName" type="text" class="search-query input-medium" placeholder="Search by name">
+            <input onkeyup="searchClientKeyPressed()" id="searchClientByAddress" type="text" class="search-query input-small" placeholder="by address">
+            <input onkeyup="searchClientKeyPressed()" id="searchClientByTelephone" type="text" class="search-query input-small" placeholder="by telephone">
+            <input onkeyup="searchClientKeyPressed()" id="searchClientByEmail" type="text" class="search-query input-small" placeholder="by email">
+            <input onkeyup="searchClientKeyPressed()" id="searchClientByLogin" type="text" class="search-query input-small" placeholder="by login">
+            <button onclick="searchClientReset()" class="btn">Reset search</button>
+        </form>
+    </div>
+    <form class="form-inline">
+        <button type="button" class="btn btn-success pull-right" disabled="true" id="expandClientButton" onclick="expandClientButtonPressed()">...</button>
+        <button type="button" class="btn btn-info pull-right" data-toggle="collapse" data-target="#searchPanel">Search client</button>
+    </form>
+    <h2> All your clients: </h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Telephone</th>
+                <th>Email</th>
+                <th>Login</th>
+                <th>Birthday</th>
+            </tr>
+        </thead>   
+        <tbody id="clientsUserAllTBody">
+        </tbody>
+    </table>
+</div>
+
+<div id="expandClientAll">
+    <button class="btn pull-right" onclick="leftViewClientsMenuPressed()">Back to client list</button>
+    <h3 id="expandClientHeader">Client:</h3>
+    <h4 id="expandClientInfo">Personal Info:</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Address</th>
+                <th>Telephone</th>
+                <th>Birthday</th>
+                <th>Email</th>
+                <th>Login</th>
+            </tr>
+        </thead>   
+        <tbody id="expandClientInfoTBody">
+            <tr>
+                <td id="expandClientInfoAddress">Address</td>
+                <td id="expandClientInfoTelephone">Telephone</td>
+                <td id="expandClientInfoBirthday">Birthday</td>
+                <td id="expandClientInfoEmail">Email</td>
+                <td id="expandClientInfoLogin">Login</td>
+            </tr>
+        </tbody>
+    </table>
+    <h4 id="expandClientAgreements">Agreements:</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Agreement#</th>
+                <th>Date</th>
+                <th>Date begin</th>
+                <th>Date end</th>
+                <th>Date pay</th>
+                <th>Sum pay</th>
+                <th>Fact. pay</th>
+                <th>On date</th>
+            </tr>
+        </thead>   
+        <tbody id="expandClientAgreementsTBody">
+        </tbody>
+    </table>
+    <h4 id="expandClientPayments">Payments:</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Paym. Date</th>
+                <th>Paym. sum</th>
+                <th>Agreement #</th>
+                <th>Bank name</th>
+                <th>Acc. number</th>
+                <th>Bank mfo</th>
+                <th>Paym purpose</th>
+            </tr>
+        </thead>   
+        <tbody id="expandClientPaymentsTBody">
+        </tbody>
+    </table>
+</div>
+
+<div id="addClient">
+    <h3>Add client info:</h3>
+    <form class="form-horizontal">
+        <div class="control-group" id="addClientCGSurname">
+            <label class="control-label" for="addClientFieldSurname" id="addClientLabelSurname">Surname</label>
+            <div class="controls">
+                <input type="text" id="addClientFieldSurname" placeholder="[a-Z] symbols" onblur="validateAddClientInput('addClientCGSurname', 'addClientLabelSurname', 'addClientFieldSurname', 'clientsSurname')">
+            </div>
+        </div>
+        <div class="control-group" id="addClientCGName">
+            <label class="control-label" for="addClientFieldName" id="addClientLabelName">Name</label>
+            <div class="controls">
+                <input type="text" id="addClientFieldName" placeholder="[a-Z] symbols" onblur="validateAddClientInput('addClientCGName', 'addClientLabelName', 'addClientFieldName', 'clientsName')">
+            </div>
+        </div>
+        <div class="control-group" id="addClientCGMiddlename">
+            <label class="control-label" for="addClientFieldMiddlename" id="addClientLabelMiddlename">Middlename</label>
+            <div class="controls">
+                <input type="text" id="addClientFieldMiddlename" placeholder="[a-Z] symbols" onblur="validateAddClientInput('addClientCGMiddlename', 'addClientLabelMiddlename', 'addClientFieldMiddlename', 'clientsMiddlename')">
+            </div>
+        </div>        
+        <div class="control-group" id="addClientCGBirthday">
+            <label class="control-label" for="addClientFieldBirthday" id="addClientLabelBirthday">Birthday</label>
+            <div class="controls">
+                <input type="text" id="addClientFieldBirthday" placeholder="yyyy-MM-dd" onblur="validateAddClientInput('addClientCGBirthday', 'addClientLabelBirthday', 'addClientFieldBirthday', 'clientsBirthday')">
+            </div>
+        </div>                
+        <div class="control-group" id="addClientCGAddress">
+            <label class="control-label" for="addClientFieldAddress" id="addClientLabelAddress">Address</label>
+            <div class="controls">
+                <input type="text" id="addClientFieldAddress" placeholder="Address" onblur="validateAddClientInput('addClientCGAddress', 'addClientLabelAddress', 'addClientFieldAddress', 'clientsAddress')">
+            </div>
+        </div>                        
+        <div class="control-group" id="addClientCGTelephone">
+            <label class="control-label" for="addClientFieldTelephone" id="addClientLabelTelephone">Telephone</label>
+            <div class="controls">
+                <input type="text" id="addClientFieldTelephone" placeholder="38-0XX-XXXXXXX" onblur="validateAddClientInput('addClientCGTelephone', 'addClientLabelTelephone', 'addClientFieldTelephone', 'clientsTelephone')">
+            </div>
+        </div>                        
+        <div class="control-group" id="addClientCGEmail">
+            <label class="control-label" for="addClientFieldEmail" id="addClientLabelEmail">Email</label>
+            <div class="controls">
+                <input type="text" id="addClientFieldEmail" placeholder="0-9,a-Z,_,-,.,@" onblur="validateAddClientInput('addClientCGEmail', 'addClientLabelEmail', 'addClientFieldEmail', 'clientsEmail')">
+            </div>
+        </div>
+        <div class="control-group" id="addClientCGSex">
+            <label class="control-label" for="addClientFieldSex" id="addClientLabelSex">Sex</label>
+            <div class="controls">
+                <select id="addClientFieldSex" onblur="validateAddClientInput('addClientCGSex', 'addClientLabelSex', 'addClientFieldSex', 'clientsSex')">
+                  <option>m</option>
+                  <option>f</option>
+                </select>
+            </div>
+        </div>                        
+        <div class="control-group" id="addClientCGLogin">
+            <label class="control-label" for="addClientFieldLogin" id="addClientLabelLogin">Login</label>
+            <div class="controls">
+                <input type="text" id="addClientFieldLogin" placeholder="Min.6 symb:0-9,a-Z,_,-,." onblur="validateAddClientLogin('addClientCGLogin', 'addClientLabelLogin', 'addClientFieldLogin', 'clientsLogin')">
+            </div>
+        </div>
+        <div class="control-group" id="addClientCGPassword">
+            <label class="control-label" for="addClientFieldPassword" id="addClientLabelPassword">Password</label>
+            <div class="controls">
+                <input type="password" id="addClientFieldPassword" placeholder="Min.8 symb:0-9,a-Z" onblur="validateAddClientPassword()">
+            </div>
+        </div>        
+        <div class="control-group" id="addClientCGPassword2">
+            <label class="control-label" for="addClientFieldPassword2" id="addClientLabelPassword2">Re-type password</label>
+            <div class="controls">
+                <input type="password" id="addClientFieldPassword2" placeholder="0-9,a-Z," onblur="validateAddClientPassword()">
+            </div>
+        </div>          
+        <div class="control-group" id="addClientCGSubmitBtn">
+            <label class="control-label" for="addClientSubmitBtn" id="addClientLabelSubmitBtn"></label>
+            <div class="controls">
+                <a id="addClientSubmitBtn" class="btn btn-primary" onclick="addClientCheckOk()">Submit</a>
+            </div>  
+        </div>                      
+    </form>
+</div>
+<div id="removeClientModal">
+    <div id="removeClientApprModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="removeClientModalLabel" aria-hidden="true">
+        <div class="modal-header">
+          <h3 id="removeClientModalLabel">Remove client confirmation</h3>
+        </div>
+        <div class="modal-body">
+            <h4>Are you sure you want to remove this client?</h4>
+            <p>If this client has any connected documents in CRM the removal will fail.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true" onclick="abortRemoveClientModal()">Close</button>
+            <button class="btn btn-primary" onclick="removeClient()">Yes, remove</button>
+        </div>
+    </div>
+</div>
+<div id="agreementsUserAll">
+    <div id="searchPanel" class="row-fluid collapse">
+        <form class="form-inline">
+            <input onkeyup="searchAgreementKeyPressed()" id="searchAgreementByNumber" type="text" class="search-query input-medium" placeholder="Search by number">
+            <input onkeyup="searchAgreementKeyPressed()" id="searchAgreementByName" type="text" class="search-query input-small" placeholder="by name">
+            <input onkeyup="searchAgreementKeyPressed()" id="searchAgreementBySum" type="text" class="search-query input-small" placeholder="by sum">
+            <select id="searchAgreementByPaid" onchange="searchAgreementKeyPressed()">
+                <option>any</option>
+                <option>not paid</option>
+                <option>paid</option>
+            </select>
+            <button onclick="searchAgreementsReset()" class="btn">Reset search</button>
+        </form>
+    </div>
+    <form class="form-inline">
+        <button type="button" class="btn pull-right" disabled id="expandClientButton" onclick=""></button>
+        <button type="button" class="btn btn-info pull-right" data-toggle="collapse" data-target="#searchPanel">Search client</button>
+    </form>
+    <h2> All your agreements: </h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Sum</th>
+                <th>Date end</th>
+                <th>Paid/Not</th>
+                <th>Paid sum</th>
+            </tr>
+        </thead>   
+        <tbody id="agreementsUserAllTBody">
+        </tbody>
+    </table>
+    <div id="removeAgreementModal">
+        <div id="removeAgreementApprModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="removeAgreementModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <h3 id="removeAgreementModalLabel">Remove agreement confirmation</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Are you sure you want to remove this agreement?</h4>
+                <p>If this agreement has any connected documents in CRM the removal will fail.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button class="btn btn-primary" onclick="removeAgreement()">Yes, remove</button>
+            </div>
+        </div>
+    </div>    
+</div>
+<div id="addAgreement">
+    <h3>Add agreement info:</h3>
+    <form class="form-horizontal">
+        <div class="control-group" id="addAgreementCGClient">
+            <label class="control-label" for="addAgreementFieldClient" id="addAgreementLabelClient">Select client</label>
+            <div class="controls">
+                <input readonly id="addAgreementFieldClient" value="No client selected"/>
+                    <button type="button" data-toggle="modal" data-target="#chooseClientModal" onclick="chooseClientModalStart()">Set client</button>
+            </div>
+        </div>
+        <div class="control-group" id="addAgreementCGAgr_number">
+            <label class="control-label" for="addAgreementFieldAgr_number" id="addAgreementLabelAgr_number">Agreement number</label>
+            <div class="controls">
+                <input type="text" id="addAgreementFieldAgr_number" placeholder="[0-9],- symbols" onblur="validateAddAgreementNumber('addAgreementCGAgr_number', 'addAgreementLabelAgr_number', 'addAgreementFieldAgr_number', 'agreementsAgr_number')">
+            </div>
+        </div>
+        <div class="control-group" id="addAgreementCGDate_written">
+            <label class="control-label" for="addAgreementFieldDate_written" id="addAgreementLabelDate_written">Date of agreement</label>
+            <div class="controls">
+                <input type="text" id="addAgreementFieldDate_written" placeholder="yyyy-MM-dd" onblur="validateAddAgreementInput('addAgreementCGDate_written', 'addAgreementLabelDate_written', 'addAgreementFieldDate_written', 'agreementsDate_written')">
+            </div>
+        </div>
+        <div class="control-group" id="addAgreementCGDate_begin">
+            <label class="control-label" for="addAgreementFieldDate_begin" id="addAgreementLabelDate_begin">Date of beginning</label>
+            <div class="controls">
+                <input type="text" id="addAgreementFieldDate_begin" placeholder="yyyy-MM-dd" onblur="validateAddAgreementInput('addAgreementCGDate_begin', 'addAgreementLabelDate_begin', 'addAgreementFieldDate_begin', 'agreementsDate_begin')">
+            </div>
+        </div>
+        <div class="control-group" id="addAgreementCGDate_end">
+            <label class="control-label" for="addAgreementFieldDate_end" id="addAgreementLabelDate_end">Date of ending</label>
+            <div class="controls">
+                <input type="text" id="addAgreementFieldDate_end" placeholder="yyyy-MM-dd" onblur="validateAddAgreementInput('addAgreementCGDate_end', 'addAgreementLabelDate_end', 'addAgreementFieldDate_end', 'agreementsDate_end')">
+            </div>
+        </div>        
+        <div class="control-group" id="addAgreementCGDate_pay">
+            <label class="control-label" for="addAgreementFieldDate_pay" id="addAgreementLabelDate_pay">Term of payment</label>
+            <div class="controls">
+                <input type="text" id="addAgreementFieldDate_pay" placeholder="yyyy-MM-dd" onblur="validateAddAgreementInput('addAgreementCGDate_pay', 'addAgreementLabelDate_pay', 'addAgreementFieldDate_pay', 'agreementsDate_pay')">
+            </div>
+         </div>   
+
+        <div class="control-group" id="addAgreementCGSum_pay">
+            <label class="control-label" for="addAgreementFieldSum_pay" id="addAgreementLabelSum_pay">Sum of agreement</label>
+            <div class="controls">
+                <input type="text" id="addAgreementFieldSum_pay" placeholder="XXXXX.XX" onblur="validateAddAgreementSum('addAgreementCGSum_pay', 'addAgreementLabelSum_pay', 'addAgreementFieldSum_pay', 'agreementsSum_pay')">
+            </div>
+         </div>           
+
+        <div class="control-group" id="addAgreementCGSubmitBtn">
+            <label class="control-label" for="addAgreementSubmitBtn" id="addAgreementLabelSubmitBtn"></label>
+            <div class="controls">
+                <a id="addAgreementSubmitBtn" class="btn btn-primary" onclick="addAgreementCheckOk()">Submit</a>
+            </div>  
+        </div>                      
+    </form>
+    <div id="chooseClientModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="chooseClientModalLabel" aria-hidden="true">
+        <div class="modal-header">
+        <input id="chooseClientModalSearchName" onkeyup="chooseClientModalSearch()" type="text" class="search-query" placeholder="Search by name">                        
+        <h3 id="chooseClientModalLabel">Choose client for new agreement</h3>
+        </div>
+        <div class="modal-body">
+            <p>Make sure you've created client in "My clients" - "Add client" menu</p>
+            <p id="chooseClientModalWait">Wait... Loading clients...</p>
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Birthday</th>
+                    </tr>
+                </thead>   
+                <tbody id="chooseClientModalTBody">
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true" onclick="abortRemoveClientModal()">Close</button>
+            <button class="btn btn-primary" onclick="chooseAddAgreementClient()">Choose</button>
+        </div>
+    </div>
+</div>
+
+<div id="paymentUserAll">
+    <div id="searchPanel" class="row-fluid collapse">
+        <form class="form-inline">
+            <input onkeyup="searchPayments()" id="searchPaymentBySum" type="text" class="search-query input-medium" placeholder="Search by sum">
+            <input onkeyup="searchPayments()" id="searchPaymentByDate" type="text" class="search-query input-small" placeholder="yyyy/mm/dd">
+            <input onkeyup="searchPayments()" id="searchPaymentByClient" type="text" class="search-query input-small" placeholder="by client">
+            <input onkeyup="searchPayments()" id="searchPaymentByBank" type="text" class="search-query input-small" placeholder="by bank">
+        </form>
+        <form class="form-inline">
+            <input onkeyup="searchPayments()" id="searchPaymentByAccount" type="text" class="search-query input-small" placeholder="by account">
+            <input onkeyup="searchPayments()" id="searchPaymentByPurpose" type="text" class="search-query input-small" placeholder="by purpose">            
+            <select id="searchPaymentByAttached" onchange="searchPayments()">
+                <option>any</option>
+                <option>not attached</option>
+                <option>attached</option>
+            </select>
+            <button onclick="searchPaymentsReset()" class="btn">Reset search</button>
+        </form>
+    </div>
+    <form class="form-inline">
+        <button type="button" class="btn btn-success pull-right" disabled id="attachPaymentButton" onclick="attachPaymentButtonPressed()">...</button>
+        <button type="button" class="btn btn-danger pull-right" disabled id="detachPaymentButton" onclick="detachPaymentButtonPressed()">...</button>
+        <button type="button" class="btn btn-info pull-right" data-toggle="collapse" data-target="#searchPanel">Search client</button>
+    </form>
+    <h2> All payments of your clients: </h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Sum</th>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Account</th>
+                <th>Bank</th>
+                <th>Purpose</th>
+                <th>Agreement</th>
+            </tr>
+        </thead>   
+        <tbody id="paymentUserAllTBody">
+        </tbody>
+    </table>
+
+    <div id="detachPaymentModal">
+        <div id="detachPaymentApprModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="detachPaymentModalLabel" aria-hidden="true">
+          <div class="modal-header">
+              <h3 id="detachPaymentModalLabel">Detach payment confirmation</h3>
+          </div>
+          <div class="modal-body">
+              <h4>Are you sure you want to detach this payment from current agreement?</h4>
+              <div id="detachAgreementModalWait"></div>
+                  <table id="agreementDetachTable" class="table">
+                      <thead>
+                          <tr>
+                              <th>Number</th>
+                              <th>Name</th>
+                              <th>Date</th>
+                              <th>Sum</th>
+                              <th>Date end</th>
+                          </tr>
+                      </thead>   
+                      <tbody id="agreementDetachTBody">
+                            <td id="agreementDetachNumber"></td>
+                            <td id="agreementDetachName"></td>
+                            <td id="agreementDetachDate"></td>
+                            <td id="agreementDetachSum"></td>
+                            <td id="agreementDetachDateend"></td>
+                      </tbody>
+                  </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button class="btn btn-primary" id="detachPaymentModalButton" onclick="detachPayment()">Yes, detach</button>
+            </div>
+        </div>
+    </div>
+    <div id="attachPaymentModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="attachPaymentModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <input id="attachPaymentModalSearchNumber" onkeyup="attachPaymentModalSearch()" type="text" class="search-query input-small" placeholder="find by number">
+            <input id="attachPaymentModalSearchName" onkeyup="attachPaymentModalSearch()" type="text" class="search-query input-small" placeholder="by name">
+            <h3 id="attachPaymentModalLabel">Choose agreement for this payment</h3>
+        </div>
+        <div class="modal-body">
+            <p>Make sure you've created agreement in "Agreement" - "Add agreement" menu</p>
+            <p id="attachPaymentModalWait">Wait... Loading agreement...</p>
+            <div  style="height:10em;  overflow: auto; ">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Sum</th>
+                        <th>Date end</th>
+                    </tr>
+                </thead>   
+                <tbody id="attachPaymentModalTBody">
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+            <button id="attachPaymentModalButton" class="btn btn-primary" onclick="attachPaymentModal()">Attach</button>
+        </div>
+    </div>
+</div>

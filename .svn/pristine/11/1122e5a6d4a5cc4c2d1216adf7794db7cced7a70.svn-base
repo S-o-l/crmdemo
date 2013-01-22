@@ -1,0 +1,143 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Staff management page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="CSS/bootstrap.css" rel="stylesheet">
+        <link href="CSS/bootstrap-responsive.css" rel="stylesheet">
+        <script src="JS/jquery.js"></script>
+        <script src="JS/bootstrap.js"></script>
+        <script src="JS/javascriptuser.js"></script>        
+        <script>
+            var jsonGotClients;
+            function loadInnerContent() {
+                $("#headerofpage").load("headerofpageus.html", function(){
+                    $("#homemenu").addClass("active");
+                    $.ajax({
+                        url: 'CheckUserLoggedInServlet',
+                        success : function(text){
+                            responsestate = text.substring(0,7);
+                            response = text.substring(7);
+                            if (responsestate == "success") {
+                                document.getElementById("appendedInput").value = "Logged as: " + response;
+                            } else {
+                                $(location).attr("href","index.jsp");
+                            }
+                        }
+                    });
+                });
+            }
+            function leftHomeMenuPressed() {
+                $("#contentPlace").load("elementsus.html #homeText", function() {
+                });
+                removeAllMenuClasses();
+                $("#leftHomeMenuIcon").addClass("icon-ok");
+            }
+            function leftHelpMenuPressed() {
+                $("#contentPlace").load("elementsus.html #helpText");
+                removeAllMenuClasses();
+                $("#leftHelpMenuIcon").addClass("icon-ok");
+            }
+            function leftMyInfoMenuPressed() {
+                $("#contentPlace").load("elementsus.html #myInfoClient", function() {
+                    updateMyInfoTable();
+                });
+                removeAllMenuClasses();
+                $("#leftMyInfoMenuIcon").addClass("icon-ok");
+            }
+            function removeAllMenuClasses() {
+            $("#leftHomeMenuIcon").removeClass("icon-ok");
+            $("#leftViewClientsMenuIcon").removeClass("icon-ok");
+            $("#leftAddClientsMenuIcon").removeClass("icon-ok");
+            $("#leftRemoveClientsMenuIcon").removeClass("icon-ok");            
+            $("#leftMyInfoMenuIcon").removeClass("icon-ok");
+            $("#leftHelpMenuIcon").removeClass("icon-ok");
+            }
+            function searchClientKeyPressed() {
+                var jsonGotClientsSearch = JSON.parse(JSON.stringify(jsonGotClients));
+                document.getElementById("clientsUserAllTBody").removeAttribute("class");
+                $("#expandClientButton").html("...");
+                $("#expandClientButton").attr("disabled","disabled");
+                searchClientFormOut(jsonGotClientsSearch);
+            }        
+            function leftViewClientsMenuPressed() {
+                removeAllMenuClasses();
+                $("#leftViewClientsMenuIcon").addClass("icon-ok");
+                $.ajax( {
+                    url: "GetUserClientsServlet",
+                    error: function() {$(location).attr("href","index.jsp");  },
+                    success: function(text) {
+                        var response = text;
+                        if (response == "failure") $(location).attr("href","index.jsp");
+                        if (response == "nodata") document.getElementById("contentPlace").innerHTML = "<div class=\"alert\"><h3><strong>Sorry!</strong></h3>    <h5>You don't have any clients.</h5></div>​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​"
+                        if (response != "failure" && response != "nodata") {
+                        jsonGotClients = JSON.parse(response);
+                        makeClientsFormElement(jsonGotClients);
+                        }
+                   }
+                });
+            }
+            function leftAddClientsMenuPressed() {
+                $("#contentPlace").load("elementsus.html #addClient");
+                removeAllMenuClasses();
+                $("#leftAddClientsMenuIcon").addClass("icon-ok");
+            }
+            function leftRemoveClientsMenuPressed() {
+                removeAllMenuClasses();
+                $("#leftRemoveClientsMenuIcon").addClass("icon-ok");
+                $.ajax( {
+                    url: "GetUserClientsServlet",
+                    error: function() {$(location).attr("href","index.jsp");  },
+                    success: function(text) {
+                        var response = text;
+                        if (response == "failure") $(location).attr("href","index.jsp");
+                        if (response == "nodata") document.getElementById("contentPlace").innerHTML = "<div class=\"alert\"><h3><strong>Sorry!</strong></h3>    <h5>You don't have any clients.</h5></div>​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​"
+                        if (response != "failure" && response != "nodata") {
+                        jsonGotClients = JSON.parse(response);
+                        makeRemoveClientsFormElement(jsonGotClients);
+                        }
+                   }
+                });
+            }            
+        </script>
+
+    </head>
+    <body onload="loadInnerContent(), leftHomeMenuPressed()">
+        <div id="headerofpage">
+        </div>
+
+        <div class="row-fluid">
+            <div class="span2" id="leftColumn">
+                <ul class="nav nav-list">
+                    <li onclick="leftHomeMenuPressed(); return false;" id="leftHomeMenu"><a href="">Home <i id="leftHomeMenuIcon" class=""></i></a></li>
+                    <li class="nav-header" data-toggle="collapse" data-target="#clientsMenuCollapse">MY CLIENTS <i class="icon-download"></i></li>
+                    <div id="clientsMenuCollapse" class="collapse">
+                        <li onclick="leftViewClientsMenuPressed()" id="leftViewClientsMenu"><a href="contentus.html#">View Clients <i id="leftViewClientsMenuIcon" class=""></i></a></li>
+                        <li onclick="leftAddClientsMenuPressed()" id="leftAddClientsMenu"><a href="contentus.html#">Add Client <i id="leftAddClientsMenuIcon" class=""></i></a></li>
+                        <li onclick="leftRemoveClientsMenuPressed()" id="leftRemoveClientsMenu"><a href="contentus.html#">Remove Client <i id="leftRemoveClientsMenuIcon" class=""></i></a></li>                    
+                    </div>
+                        <!--<li onclick="leftAgreementsMenuPressed()" id="leftAgreementsMenu"><a href="contentcl.html#">Agreements</a></li>-->
+                    <li class="nav-header">AGREEMENTS</li>
+                    <!--<li onclick="leftMyInfoMenuPressed()" id="leftMyInfoMenu"><a href="contentcl.html#">My info</a></li>-->
+                    <li class="nav-header">PAYMENTS</li>
+                    <li class="nav-header">BANK</li>
+                    <li class="nav-header" data-toggle="collapse" data-target="#myInfoMenuCollapse">PERSONAL INFO <i class="icon-download"></i></li>
+                    <div id="myInfoMenuCollapse" class="collapse" >
+                        <li onclick="leftMyInfoMenuPressed(); return false;" id="leftMyInfoMenu"><a href="">My info <i id="leftMyInfoMenuIcon" class=""></i></a></li>
+                        <li onclick="leftHelpMenuPressed(); return false;" id="leftHelpMenu"><a href="">Help <i id="leftHelpMenuIcon" class=""></i></a></li>
+                    </div>
+                </ul>
+            </div>
+            <div class="span10" id="centerColumn">
+                <div id="contentPlace">
+                    <div id="outputBodyPlace"></div>
+                </div>
+
+            </div>
+        </div>
+    </body>
+</html>

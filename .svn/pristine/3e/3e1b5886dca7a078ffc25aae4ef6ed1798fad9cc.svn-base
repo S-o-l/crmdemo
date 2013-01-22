@@ -1,0 +1,42 @@
+<!--<div id="currencyInformer"
+<style>
+#IUAfinance80 { min-width: 175px; width: 240px; cursor: pointer;}
+#IUAfinance80 * {margin: 0; padding: 0;}
+#IUAfinance80 .content {overflow: hidden; padding: 4px; font-family: Arial; font-size: 10px; color: #666666; background: #bbddff; border: 1px solid #1166cc;}
+#IUAfinance80 h1 {overflow: hidden; margin-top: -4px; font-size: 12px; font-weight: bold; height: 20px; line-height: 20px; color: #1166cc;}
+#IUAfinance80 h1 span {float: left; white-space: nowrap;}
+#IUAfinance80 h1 i {float: right; display: inline-block; width: 36px; height: 15px; background: url(http://i.i.ua/v2/logo/logo_small_14_black.png) no-repeat 0 1px transparent; opacity: .3;}
+#IUAfinance80 a, #IUAfinance80 a:hover {border: none; text-decoration: underline; color: #1166cc;}
+#IUAfinance80 dl {overflow: hidden; background: #ffffff; padding: 4px; margin-bottom: 4px;}
+#IUAfinance80 dl dt {font-weight: bold; font-size: 12px;}
+#IUAfinance80 dl dd {clear: left; border-top: 1px dotted #DDD;}
+#IUAfinance80 dl span {display: block; float: left; width: 39%; white-space: nowrap; text-align: right;}
+#IUAfinance80 dl span.th {width: 22%; text-align: left;}
+#IUAfinance80 dl dt span {font-size: 10px; font-weight: normal;}
+#IUAfinance80 dl dd span {line-height: 24px; font-size: 20px; font-family: Trebuchet MS;}
+#IUAfinance80 dl dd span img {vertical-align: middle; margin-right: 1px;}
+</style>
+<div id="IUAfinance80">
+	<div class="content">
+		<h1><span><a href="http://finance.i.ua/bank/15/" id="IUAfinance80TitleLink">Курсы валют</a></span><i></i></h1>
+		<dl id="IUAfinance80Embed"></dl>
+		<a href="http://finance.i.ua/">Курсы доллара, евро и рубля по банкам</a>
+	</div>
+</div>
+<script type="text/javascript">
+if (typeof(iFinance) == "undefined") {
+	if (typeof(iFinanceData) == "undefined") {
+		document.write('<scr' + 'ipt src="http://i.i.ua/js/i/finance_informer.js?1" type="text/javascript" charset = "windows-1251"></scr' + 'ipt>');
+		iFinanceData = [];
+	}
+	iFinanceData.push({b:15,c:[840,978,643],enc:0, lang:0,p:'80'});
+} else {
+	window['oiFinance80'] = new iFinance();
+	window['oiFinance80'].gogo({b:15,c:[840,978,643],enc:0, lang:0,p:'80'});
+}
+</script>
+<div>-->
+
+<!--<div id="weatherInformer">
+<div id="SinoptikInformer" style="width:160px;" class="SinoptikInformer type4c1"><div class="siHeader"><div class="siLh"><div class="siMh"><a onmousedown="siClickCount();" href="http://sinoptik.ua/" target="_blank">Погода</a><a onmousedown="siClickCount();" class="siLogo" href="http://sinoptik.ua/" target="_blank"><img alt="Прогноз погоды" src="http://informers.sinoptik.ua/img/t.gif" /></a> </div></div></div><div class="siBody"><div class="siTitle"><span id="siHeader"></span></div><div class="siCity"><div class="siCityName"><a onmousedown="siClickCount();" href="http://sinoptik.ua/погода-киев" target="_blank">Погода в <span>Киеве</span></a></div><div id="siCont0" class="siBodyContent"><div class="siLeft"><div class="siTerm"></div><div class="siT" id="siT0"></div><div id="weatherIco0"></div></div><div class="siInf"><p>влажн.: <span id="vl0"></span></p><p>давл.: <span id="dav0"></span></p><p>ветер: <span id="wind0"></span></p></div></div></div><div class="siLinks"><span><a onmousedown="siClickCount();" href="http://sinoptik.ua/погода-киев" target="_blank">на сегодня</a> <a onmousedown="siClickCount();" href="http://sinoptik.ua/погода-киев/завтра" target="_blank">завтра</a> <a onmousedown="siClickCount();" href="http://sinoptik.ua/погода-киев/10-дней" target="_blank">10 дней</a></span> <span><a onmousedown="siClickCount();" href="http://sinoptik.ua/украина" target="_blank">в других городах</a></span></div></div><div class="siFooter"><div class="siLf"><div class="siMf"></div></div></div></div><script type="text/javascript" charset="UTF-8" src="http://informers.sinoptik.ua/js3.php?title=2&amp;wind=1&amp;cities=303010783&amp;lang=ru"></script>
+</div>-->

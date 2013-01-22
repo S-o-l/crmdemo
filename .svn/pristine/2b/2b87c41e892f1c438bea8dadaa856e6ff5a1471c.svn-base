@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <servlet>
+        <servlet-name>TestRegistrationServlet</servlet-name>
+        <servlet-class>crmdb.TestRegistrationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TestConnectionsServlet</servlet-name>
+        <servlet-class>crmdb.TestConnectionsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ClientLoginServlet</servlet-name>
+        <servlet-class>crmdb.ClientLoginServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CheckClientLoggedInServlet</servlet-name>
+        <servlet-class>crmdb.CheckClientLoggedInServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TestRegistrationServlet</servlet-name>
+        <url-pattern>/TestRegistrationServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TestConnectionsServlet</servlet-name>
+        <url-pattern>/TestConnectionsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ClientLoginServlet</servlet-name>
+        <url-pattern>/ClientLoginServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckClientLoggedInServlet</servlet-name>
+        <url-pattern>/CheckClientLoggedInServlet</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>

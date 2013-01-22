@@ -1,0 +1,148 @@
+<div id ="homeText">
+<h2> Hello! </h2>
+
+            <p> This is a starting page of user management part of CRM.</p>
+            <p> The user can view his clients, agreements and payments made by his clients. He can add or remove any of kind of these records.</p>
+            <p> He also can check existing bank accounts.</p>
+</div>
+<div id ="helpText">
+<h2> Help </h2>
+
+            <p> This is user help page of a demo of simple CRM.</p>
+            <p> Under collapsible menu "Clients" the user can view his clients by pressing "View clients", add clients or remove them (only if they don't have any connected documents or SQL cascading on delete (restrict) will forbid to make such operation and report error to user).</p>
+            <p> Under menu "Agreements" and "Payments" user can view, add, remove agreements and payments in same way as his clients.</p>
+            <p> In menu "Bank" user can check info on existing bank accounts, user can also view this page by selecting "Help"</p>
+</div>
+<div id="myInfoClient">
+    
+    <h2>Your personal info:</h2>
+
+    <form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" for="fieldName">Name</label>
+        <div class="controls">
+            <input type="text" id="fieldName" value="Name" disabled>
+        </div>
+    </div>
+
+        <div class="control-group">
+            <label class="control-label" for="fieldSurname">Surname</label>
+            <div class="controls">
+                <input type="text" id="fieldSurname" value="Surname" disabled>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="fieldMiddlename">Middle name</label>
+            <div class="controls">
+                <input type="text" id="fieldMiddlename" value="Middlename" disabled>
+            </div>
+        </div>        
+
+        <div class="control-group">
+            <label class="control-label" for="department">Department</label>
+            <div class="controls">
+                <input type="text" id="fieldDepartment" value="Department" disabled>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="position">Position</label>
+            <div class="controls">
+                <input type="text" id="fieldPosition" value="Position" disabled>
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label class="control-label" for="birthday">Birthday</label>
+            <div class="controls">
+                <input type="date" id="fieldBirthday" value="2012-11-11" disabled>
+            </div>
+        </div>        
+
+        <div class="control-group">
+            <label class="control-label" for="fieldAddress">Address</label>
+            <div class="controls">
+                <input type="text" id="fieldAddress" value="Address" disabled>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="fieldEmail">Email</label>
+            <div class="controls">
+                <input type="text" id="fieldEmail" value="Email" disabled>
+            </div>
+        </div>                        
+        
+        <div class="control-group">
+            <label class="control-label" for="fieldGender">Gender</label>
+            <div class="controls">
+                <input type="text" id="fieldGender" value="Gender" disabled>
+            </div>
+        </div>        
+    </form>
+</div>
+
+
+<div id="paymentsClientAll">
+    <h2> All your payments: </h2>
+<table class="table table-striped">
+  <thead>
+      <tr>
+          <th>Date</th>
+          <th>Sum</th>
+          <th>Sum purpose</th>
+          <th>More</th>                                          
+      </tr>
+  </thead>   
+  <tbody id="paymentsClientAllTBody">
+
+  </tbody>
+</table>
+</div>
+
+<div id="clientsUserAll">
+    <div id="searchPanel" class="row-fluid collapse">
+        <form class="form-inline">
+            <input onkeypress="searchClientByName" type="text" class="search-query input-medium" placeholder="Search by name">
+            <input onkeypress="searchClientByAddress" type="text" class="search-query input-small" placeholder="by address">
+            <input onkeypress="searchClientByTelephone" type="text" class="search-query input-small" placeholder="by telephone">
+            <input onkeypress="searchClientByEmail" type="text" class="search-query input-small" placeholder="by email">
+            <input onkeypress="searchClientByLogin" type="text" class="search-query input-small" placeholder="by login">
+            <button onkeypress="searchClientReset" class="btn">Reset search</button>
+        </form>
+    </div>
+    <button type="button" class="btn btn-info pull-right" data-toggle="collapse" data-target="#searchPanel">Search client</button>
+    <h2> All your clients: </h2>
+<table class="table table-striped">
+  <thead>
+      <tr>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Telephone</th>
+          <th>Email</th>
+          <th>Login</th>
+          <th>Birthday</th>
+      </tr>
+  </thead>   
+  <tbody id="clientsUserAllTBody">
+  </tbody>
+</table>
+</div>
+
+<div id="agreementsClientAll">
+    <h2> All your agreements: </h2>
+<table class="table table-striped">
+  <thead>
+      <tr>
+          <th>Agreement #</th>
+          <th>Date</th>
+          <th>Sum</th>
+          <th>Paym. date</th>
+          <th>More</th>
+      </tr>
+  </thead>   
+  <tbody id="agreementsClientAllTBody">
+  </tbody>
+</table>
+</div>

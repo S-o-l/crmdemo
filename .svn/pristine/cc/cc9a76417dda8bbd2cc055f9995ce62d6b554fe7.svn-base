@@ -1,0 +1,80 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="CSS/bootstrap.css" rel="stylesheet">
+        <link href="CSS/bootstrap-responsive.css" rel="stylesheet">
+        <script src="JS/jquery.js"></script>
+        <script src="JS/bootstrap.js"></script>
+<script>
+    function getInfo() {
+        var xmlhttp;
+        console.log("---------- func started ---------")
+        if (window.XMLHttpRequest)
+              {// code for IE7+, Firefox, Chrome, Opera, Safari
+              xmlhttp=new XMLHttpRequest();
+            console.log("---------- code for IE7+, Firefox, Chrome, Opera, Safari started ---------")              
+              }
+            else
+              {// code for IE6, IE5
+              xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            console.log("---------- ccode for IE6, IE5 started ---------")              
+              }
+            xmlhttp.onreadystatechange=function()
+            {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                    console.log("---------- ready state 4!!!!!!!!! ------------");
+                    var jsonGot = JSON.parse(xmlhttp.responseText);
+                    console.log(xmlhttp.responseText);
+                    console.log(jsonGot.length);
+                    console.log(jsonGot[0].currency+" :tried");
+                    var bdy = document.getElementById("table2load");
+                    bdy.innerHTML = "";
+                    var tbl = document.createElement("table");
+                    tbl.id = "loadedtable";
+                    var header = "<caption>Table from db</caption>  <thead>    <tr>      <th>bank_acc_id</th>      <th>bank_id</th>      <th>acc</th>      <th>cur</th>      <th>state</th>     </tr>  </thead>";
+                    tbl.innerHTML = header;                
+                    tbl.className = tbl.className + "table table-bordered";
+                    var tblbody = document.createElement("tbody");
+                    var jsonnames = ["bank_acc_id", "bank_id", "acc_number", "currency", "acc_state"]
+                    for (var i = 0; i < jsonGot.length ; i++) {
+                        var row = document.createElement("tr");
+                        for (j=0; j<5;j++) {
+                            var cell = document.createElement("td");
+                            var cellText = document.createTextNode(jsonGot[i].bank_acc_id);
+                            cell.appendChild(cellText);
+                            row.appendChild(cell);
+                        }
+                        tblbody.appendChild(row);
+                    }
+                    tbl.appendChild(tblbody);
+                    bdy.appendChild(tbl);
+                }
+                }
+            xmlhttp.open("GET", "TestConnectionsServlet?" + "param1=" + document.getElementById("inputLogin").value + "&" + "param2=" + document.getElementById("inputPassword").value, true);
+            xmlhttp.send();
+    }
+</script>
+
+    </head>
+    <body>
+<form>
+  <fieldset>
+    <legend>Input form for .get function</legend>
+    <label>Input bank name</label>
+    <input type="text" id="inputLogin" placeholder="Type bank">
+    <label>Input account number</label>
+    <input type="text" id="inputPassword" placeholder="Type account number">
+    <input class="btn" onclick="getInfo()" value="Make request"/>
+  </fieldset>
+<div id="table2load">
+</div>
+
+</form>
+    </body>
+</html>

@@ -1,0 +1,105 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package crmdb;
+
+import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+/**
+ *
+ * @author TempRDP2
+ */
+@Entity
+@Table(name="payments")
+public class Payment {
+    private static final long serialVersionUID = 1L;
+    
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private int payment_id;
+
+    @ManyToOne
+    @JoinColumn(name="account_id")    
+    private Banks_account banks_account;
+
+    @ManyToOne
+    @JoinColumn(name="client_id")
+    private Client client;
+    
+    private long paym_sum;
+    private String paym_purpose;
+    @Temporal(TemporalType.DATE)
+    private Date paym_date;
+    private int paym_state;
+
+    public int getPayment_id() {
+        return payment_id;
+    }
+
+    public void setPayment_id(int payment_id) {
+        this.payment_id = payment_id;
+    }
+
+    public Banks_account getBanks_account() {
+        return banks_account;
+    }
+
+    public void setBanks_account(Banks_account banks_account) {
+        this.banks_account = banks_account;
+    }
+
+    public long getPaym_sum() {
+        return paym_sum;
+    }
+
+    public void setPaym_sum(long paym_sum) {
+        this.paym_sum = paym_sum;
+    }
+
+    public String getPaym_purpose() {
+        return paym_purpose;
+    }
+
+    public void setPaym_purpose(String paym_purpose) {
+        this.paym_purpose = paym_purpose;
+    }
+
+    public Date getPaym_date() {
+        return paym_date;
+    }
+
+    public void setPaym_date(Date paym_date) {
+        this.paym_date = paym_date;
+    }
+
+
+    
+    public int getPaym_state() {
+        return paym_state;
+    }
+
+    public void setPaym_state(int paym_state) {
+        this.paym_state = paym_state;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    
+    
+}

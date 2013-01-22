@@ -1,0 +1,176 @@
+<div id ="homeText">
+<h2> Hello! </h2>
+
+            <p> This is a starting page of user management part of CRM.</p>
+            <p> The user can view his clients, agreements and payments made by his clients. He can add or remove any of kind of these records.</p>
+            <p> He also can check existing bank accounts.</p>
+</div>
+<div id ="helpText">
+<h2> Help </h2>
+
+            <p> This is user help page of a demo of simple CRM.</p>
+            <p> Under collapsible menu "Clients" the user can view his clients by pressing "View clients", add clients or remove them (only if they don't have any connected documents or SQL cascading on delete (restrict) will forbid to make such operation and report error to user).</p>
+            <p> Under menu "Agreements" and "Payments" user can view, add, remove agreements and payments in same way as his clients.</p>
+            <p> In menu "Bank" user can check info on existing bank accounts, user can also view this page by selecting "Help"</p>
+</div>
+<div id="myInfoClient">
+    
+    <h2>Your personal info:</h2>
+
+    <form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" for="fieldName">Name</label>
+        <div class="controls">
+            <input type="text" id="fieldName" value="Name" disabled>
+        </div>
+    </div>
+
+        <div class="control-group">
+            <label class="control-label" for="fieldSurname">Surname</label>
+            <div class="controls">
+                <input type="text" id="fieldSurname" value="Surname" disabled>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="fieldMiddlename">Middle name</label>
+            <div class="controls">
+                <input type="text" id="fieldMiddlename" value="Middlename" disabled>
+            </div>
+        </div>        
+
+        <div class="control-group">
+            <label class="control-label" for="department">Department</label>
+            <div class="controls">
+                <input type="text" id="fieldDepartment" value="Department" disabled>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="position">Position</label>
+            <div class="controls">
+                <input type="text" id="fieldPosition" value="Position" disabled>
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label class="control-label" for="birthday">Birthday</label>
+            <div class="controls">
+                <input type="date" id="fieldBirthday" value="2012-11-11" disabled>
+            </div>
+        </div>        
+
+        <div class="control-group">
+            <label class="control-label" for="fieldAddress">Address</label>
+            <div class="controls">
+                <input type="text" id="fieldAddress" value="Address" disabled>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="fieldEmail">Email</label>
+            <div class="controls">
+                <input type="text" id="fieldEmail" value="Email" disabled>
+            </div>
+        </div>                        
+        
+        <div class="control-group">
+            <label class="control-label" for="fieldGender">Gender</label>
+            <div class="controls">
+                <input type="text" id="fieldGender" value="Gender" disabled>
+            </div>
+        </div>        
+    </form>
+</div>
+
+<div id="clientsUserAll">
+    <div id="searchPanel" class="row-fluid collapse">
+        <form class="form-inline">
+            <input onkeyup="searchClientKeyPressed()" id="searchClientByName" type="text" class="search-query input-medium" placeholder="Search by name">
+            <input onkeyup="searchClientKeyPressed()" id="searchClientByAddress" type="text" class="search-query input-small" placeholder="by address">
+            <input onkeyup="searchClientKeyPressed()" id="searchClientByTelephone" type="text" class="search-query input-small" placeholder="by telephone">
+            <input onkeyup="searchClientKeyPressed()" id="searchClientByEmail" type="text" class="search-query input-small" placeholder="by email">
+            <input onkeyup="searchClientKeyPressed()" id="searchClientByLogin" type="text" class="search-query input-small" placeholder="by login">
+            <button onclick="searchClientReset()" class="btn">Reset search</button>
+        </form>
+    </div>
+    <form class="form-inline">
+        <button type="button" class="btn btn-success pull-right" disabled="true" id="expandClientButton" onclick="expandClientButtonPressed()">...</button>
+        <button type="button" class="btn btn-info pull-right" data-toggle="collapse" data-target="#searchPanel">Search client</button>
+    </form>
+    <h2> All your clients: </h2>
+<table class="table table-striped">
+  <thead>
+      <tr>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Telephone</th>
+          <th>Email</th>
+          <th>Login</th>
+          <th>Birthday</th>
+      </tr>
+  </thead>   
+  <tbody id="clientsUserAllTBody">
+  </tbody>
+</table>
+</div>
+
+<div id="expandClientAll">
+    <h2 id="expandClientHeader">Client:</h2>
+    <h4 id="expandClientInfo">Personal Info:</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Address</th>
+                <th>Telephone</th>
+                <th>Birthday</th>
+                <th>Email</th>
+                <th>Login</th>
+            </tr>
+        </thead>   
+        <tbody id="expandClientInfoTBody">
+            <tr>
+                <td id="expandClientInfoAddress">Address</td>
+                <td id="expandClientInfoTelephone">Telephone</td>
+                <td id="expandClientInfoBirthday">Birthday</td>
+                <td id="expandClientInfoEmail">Email</td>
+                <td id="expandClientInfoLogin">Login</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4 id="expandClientAgreements">Agreements:</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Agreement#</th>
+                <th>Date</th>
+                <th>Date begin</th>
+                <th>Date end</th>
+                <th>Date pay</th>
+                <th>Sum pay</th>
+                <th>Fact. pay</th>
+                <th>On date</th>
+            </tr>
+        </thead>   
+        <tbody id="expandClientAgreementsTBody">
+        </tbody>
+    </table>
+
+    <h4 id="expandClientPayments">Payments:</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Paym. Date</th>
+                <th>Paym. sum</th>
+                <th>Agreement #</th>
+                <th>Bank name</th>
+                <th>Acc. number</th>
+                <th>Bank mfo</th>
+                <th>Paym purpose</th>
+            </tr>
+        </thead>   
+        <tbody id="expandClientPaymentsTBody">
+        </tbody>
+    </table>
+</div>

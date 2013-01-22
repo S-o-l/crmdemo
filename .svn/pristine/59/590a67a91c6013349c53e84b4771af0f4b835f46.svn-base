@@ -1,0 +1,794 @@
+/* 
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+            function logoutUser() {
+                var btn = $("#logoutButton");
+                $.ajax({ url: "LogoutServlet",
+                    success : function(text){
+                        response = text;
+                        if (response == "success") {
+                            $(location).attr("href","index.jsp");
+                        } else {
+                            $("#logoutButton").innerHtml = "Failed!"
+                        }
+                    },
+                    error: function() { $("#logoutButton").innerHtml = "Failed!" }
+                });                            
+            }
+            function updateMyInfoTable() {
+                $.ajax({ url: "GetUserServlet",
+                    success : function(text){
+                        response = text;
+                        if (response == "failure") {
+                            $(location).attr("href","index.jsp");
+                        } else {
+                            var jsonGot = JSON.parse(response);
+                            console.log(response);
+                            document.getElementById("fieldName").value = jsonGot[0].name;
+                            document.getElementById("fieldSurname").value = jsonGot[0].surname;
+                            document.getElementById("fieldMiddlename").value = jsonGot[0].middlename;
+                            document.getElementById("fieldDepartment").value = jsonGot[0].department;
+                            document.getElementById("fieldPosition").value = jsonGot[0].position;
+                            document.getElementById("fieldAddress").value = jsonGot[0].address;
+                            document.getElementById("fieldBirthday").value = jsonGot[0].birthday;
+                            document.getElementById("fieldEmail").value = jsonGot[0].email;
+                            document.getElementById("fieldGender").value = jsonGot[0].sex;
+                        }
+                    },
+                    error: function() { $(location).attr("href","index.jsp") }
+                    });
+
+            }
+            function makeClientsFormElement(jsonGot) {
+                $("#contentPlace").load("elementsus.html #clientsUserAll", function() {makeClientsFormElementP2(jsonGot);});
+            }
+            function makeClientsFormElementP2(jsonGotP2) {
+                for (j=0; j <jsonGotP2.length; j++) {
+                    var newRow = document.createElement("tr");
+                    newRow.setAttribute("id", "rowNumber" + j);
+                    newRow.setAttribute("onclick", "makeRowSelected(\"rowNumber" + j + "\")");
+                    newRow.setAttribute("data-clientid", jsonGotP2[j].client_id);
+                    var cell1 = document.createElement("td");
+                    cell1.innerHTML = jsonGotP2[j].name+" "+jsonGotP2[j].middlename+" "+jsonGotP2[j].surname;
+                    var cell2 = document.createElement("td");
+                    cell2.innerHTML = jsonGotP2[j].address;
+                    var cell3 = document.createElement("td");
+                    cell3.innerHTML = jsonGotP2[j].telephone;
+                    var cell4 = document.createElement("td");
+                    cell4.innerHTML = jsonGotP2[j].email;
+                    var cell5 = document.createElement("td");
+                    cell5.innerHTML = jsonGotP2[j].login;
+                    var cell6 = document.createElement("td");
+                    cell6.innerHTML = jsonGotP2[j].birthday;
+                    newRow.appendChild(cell1);
+                    newRow.appendChild(cell2);                    
+                    newRow.appendChild(cell3);
+                    newRow.appendChild(cell4);
+                    newRow.appendChild(cell5);
+                    newRow.appendChild(cell6);                    
+                    document.getElementById("clientsUserAllTBody").appendChild(newRow);
+                }
+            }
+            function searchClientFormOut(jsonGotClientsSearch) {
+                var searchClientName = document.getElementById("searchClientByName").value.toLowerCase()// == "") ? null : document.getElementById("searchClientByName").value;
+                var searchClientAddress = document.getElementById("searchClientByAddress").value.toLowerCase()// == "") ? null : document.getElementById("searchClientByAddress").value;
+                var searchClientTelephone = document.getElementById("searchClientByTelephone").value.toLowerCase()// == "") ? null : document.getElementById("searchClientByTelephone").value;
+                var searchClientEmail = document.getElementById("searchClientByEmail").value.toLowerCase()// == "") ? null : document.getElementById("searchClientByEmail").value;
+                var searchClientLogin = document.getElementById("searchClientByLogin").value.toLowerCase()// == "") ? null : document.getElementById("searchClientByLogin").value;
+                for (i = 0; i < jsonGotClientsSearch.length; i++) {
+                    var keepRow = 1;
+                    var jsonFullName = jsonGotClientsSearch[i].name + " " + jsonGotClientsSearch[i].surname + " " + jsonGotClientsSearch[i].middlename;
+                    keepRow *= (jsonFullName.toLowerCase().indexOf(searchClientName) + 1);
+                    keepRow *= (jsonGotClientsSearch[i].address.toLowerCase().indexOf(searchClientAddress) + 1);
+                    keepRow *= (jsonGotClientsSearch[i].telephone.toLowerCase().indexOf(searchClientTelephone) + 1);
+                    keepRow *= (jsonGotClientsSearch[i].email.toLowerCase().indexOf(searchClientEmail) + 1);
+                    keepRow *= (jsonGotClientsSearch[i].login.toLowerCase().indexOf(searchClientLogin) + 1);
+                    if (keepRow == 0) {
+                        jsonGotClientsSearch.splice(i, 1);//delete jsonGotClientsSearch[i];
+                        i -= 1;
+                    }
+                }
+                document.getElementById("clientsUserAllTBody").innerHTML = "";
+                makeClientsFormElementP2(jsonGotClientsSearch);
+            }
+            function makeRowSelected(rowid) {
+                var prevSelRow = $("#clientsUserAllTBody").attr("class");
+                if (prevSelRow != null) document.getElementById(prevSelRow).removeAttribute("class");
+                if (prevSelRow == null) {
+                    $("#expandClientButton").html("Expand client");
+                    $("#expandClientButton").removeAttr("disabled");
+                }
+                document.getElementById("clientsUserAllTBody").setAttribute("class", rowid);
+                document.getElementById(rowid).setAttribute("class", "info");
+            }
+            function searchClientReset() {
+                document.getElementById("searchClientByName").value = "";
+                document.getElementById("searchClientByAddress").value = "";
+                document.getElementById("searchClientByTelephone").value = "";
+                document.getElementById("searchClientByEmail").value = "";
+                document.getElementById("searchClientByLogin").value = "";
+                searchClientKeyPressed();
+            }
+            function expandClientButtonPressed(){
+                $("#expandClientButton").html("Wait...");
+                $("#expandClientButton").attr("disabled","disabled");
+                var client_id = document.getElementById(document.getElementById("clientsUserAllTBody").getAttribute("class")).getAttribute(("data-clientid"));
+                $.ajax({
+                    url: "GetUserExpandClientServlet",
+                    data: {"param1" : client_id},
+                    error: function() {
+                        $("#expandClientButton").html("FAILED");
+                        $("#expandClientButton").removeAttr("disabled");
+                    },
+                    success: function(text) {
+                        response = text;
+                        if (response == "failure") {
+                            $(location).attr("href","index.jsp");
+                        } else {
+                            var jsonExpandClient = JSON.parse(response);
+                            $("#contentPlace").load("elementsus.html #expandClientAll", function() {makeExpandFormElement(jsonExpandClient);});
+                        }
+                    }
+                });
+            }
+            
+            function makeExpandFormElement(jsonGot) {
+                $("#contentPlace").load("elementsus.html #expandClientAll", function() {
+                    makeExpandClientFormElementP2(jsonGot);
+                    makeExpandAgreementsFormElementP2(jsonGot);
+                    makeExpandPaymentsFormElementP2(jsonGot);                
+                });
+            }
+            function makeExpandClientFormElementP2(jsonGotP2) {
+                $("#expandClientHeader").html("Client: <em>" + jsonGotP2.client.surname + " " + jsonGotP2.client.name + " " + jsonGotP2.client.middlename + "</em");
+                $("#expandClientInfoAddress").html(jsonGotP2.client.address);
+                $("#expandClientInfoTelephone").html(jsonGotP2.client.telephone);
+                $("#expandClientInfoBirthday").html(jsonGotP2.client.birthday);
+                $("#expandClientInfoEmail").html(jsonGotP2.client.email);
+                $("#expandClientInfoLogin").html(jsonGotP2.client.login);
+            }
+            function makeExpandAgreementsFormElementP2(jsonGotP2) {
+                for (j=0; j <jsonGotP2.agreements.length; j++) {
+                    var newRow = document.createElement("tr");
+                    newRow.setAttribute("id", "rowAgrNumber" + j);
+                    var cell1 = document.createElement("td");
+                    cell1.innerHTML = jsonGotP2.agreements[j].agr_number;
+                    var cell2 = document.createElement("td");
+                    cell2.innerHTML = jsonGotP2.agreements[j].date_written;
+                    var cell3 = document.createElement("td");
+                    cell3.innerHTML = jsonGotP2.agreements[j].date_begin;
+                    var cell4 = document.createElement("td");
+                    cell4.innerHTML = jsonGotP2.agreements[j].date_end;
+                    var cell5 = document.createElement("td");
+                    cell5.innerHTML = jsonGotP2.agreements[j].date_pay;
+                    var cell6 = document.createElement("td");
+                    cell6.innerHTML = jsonGotP2.agreements[j].sum_pay/100;
+                    var paid = true;
+                    if (!("payment" in jsonGotP2.agreements[j])) paid = false;
+                    var cell7 = document.createElement("td");
+                    var cell8 = document.createElement("td");
+                    if (paid) {
+                        cell7.innerHTML = jsonGotP2.agreements[j].payment.paym_sum/100;
+                        cell8.innerHTML = jsonGotP2.agreements[j].payment.paym_date;
+                    } else {
+                        cell7.innerHTML = "Not paid";
+                        cell8.innerHTML = "Not paid";
+                        newRow.setAttribute("class", "error");
+                    }
+                    newRow.appendChild(cell1);
+                    newRow.appendChild(cell2);                    
+                    newRow.appendChild(cell3);
+                    newRow.appendChild(cell4);
+                    newRow.appendChild(cell5);
+                    newRow.appendChild(cell6);                  
+                    newRow.appendChild(cell7);
+                    newRow.appendChild(cell8);                    
+                    document.getElementById("expandClientAgreementsTBody").appendChild(newRow);
+                }
+            }
+
+            function makeExpandPaymentsFormElementP2(jsonGotP2) {
+                for (j=0; j <jsonGotP2.agreements.length; j++) {
+                    if ("payment" in jsonGotP2.agreements[j]) {
+                        var newRow = document.createElement("tr");
+                        newRow.setAttribute("id", "rowPayAgrNumber" + j);
+                        var cell1 = document.createElement("td");
+                        cell1.innerHTML = jsonGotP2.agreements[j].payment.paym_date;
+                        var cell2 = document.createElement("td");
+                        cell2.innerHTML = jsonGotP2.agreements[j].payment.paym_sum/100;
+                        var cell3 = document.createElement("td");
+                        cell3.innerHTML = jsonGotP2.agreements[j].agr_number;
+                        var cell4 = document.createElement("td");
+                        cell4.innerHTML = jsonGotP2.agreements[j].payment.banks_account.bank.name;
+                        var cell5 = document.createElement("td");
+                        cell5.innerHTML = jsonGotP2.agreements[j].payment.banks_account.acc_number;
+                        var cell6 = document.createElement("td");
+                        cell6.innerHTML = jsonGotP2.agreements[j].payment.banks_account.bank.mfo;
+                        var cell7 = document.createElement("td");
+                        cell7.innerHTML = jsonGotP2.agreements[j].payment.paym_purpose;
+                        newRow.appendChild(cell1);
+                        newRow.appendChild(cell2);                    
+                        newRow.appendChild(cell3);
+                        newRow.appendChild(cell4);
+                        newRow.appendChild(cell5);
+                        newRow.appendChild(cell6);                  
+                        newRow.appendChild(cell7);
+                        document.getElementById("expandClientPaymentsTBody").appendChild(newRow);                        
+                    }
+                    
+                }
+                for (j=0; j <jsonGotP2.payments.length; j++) {
+                if (jsonGotP2.payments[j].paym_state == 2) {
+                        var newRow = document.createElement("tr");
+                        newRow.setAttribute("id", "rowPayPayNumber" + j);
+                        newRow.setAttribute("class", "error");
+                        var cell1 = document.createElement("td");
+                        cell1.innerHTML = jsonGotP2.payments[j].paym_date;
+                        var cell2 = document.createElement("td");
+                        cell2.innerHTML = jsonGotP2.payments[j].paym_sum/100;
+                        var cell3 = document.createElement("td");
+                        cell3.innerHTML = "No agreement!";
+                        var cell4 = document.createElement("td");
+                        cell4.innerHTML = jsonGotP2.payments[j].banks_account.bank.name;
+                        var cell5 = document.createElement("td");
+                        cell5.innerHTML = jsonGotP2.payments[j].banks_account.acc_number;
+                        var cell6 = document.createElement("td");
+                        cell6.innerHTML = jsonGotP2.payments[j].banks_account.bank.mfo;
+                        var cell7 = document.createElement("td");
+                        cell7.innerHTML = jsonGotP2.payments[j].paym_purpose;
+                        newRow.appendChild(cell1);
+                        newRow.appendChild(cell2);                    
+                        newRow.appendChild(cell3);
+                        newRow.appendChild(cell4);
+                        newRow.appendChild(cell5);
+                        newRow.appendChild(cell6);                  
+                        newRow.appendChild(cell7);
+                        document.getElementById("expandClientPaymentsTBody").appendChild(newRow);                        
+                    }
+                    
+                }
+            }
+            function validateAddClientInput(param1, param2, param3, param4) {
+                console.log("param4: " + param4 + " param3: " + param3 + "val: " + $("#" + param3).val());
+                var passing = {}
+                passing[param4]= $("#" + param3).val();
+                $.ajax({
+                    url: "ValidateServlet",
+                    data: passing,
+                    error: function() {
+                        $("#" + param1).addClass("error");
+                        $("#" + param1).removeClass("success");
+                        $("#" + param2).html("Wrong input!");
+                    },
+                    success: function(text) {
+                        response = text;
+                        console.log(text);
+                        if (response == "success") {
+                            $("#" + param1).addClass("success");
+                            $("#" + param1).removeClass("error");
+                            $("#" + param2).html("Ok!");
+                        } else {
+                            $("#" + param1).addClass("error");
+                            $("#" + param1).removeClass("success");
+                            $("#" + param2).html("Wrong input!");
+                        }
+                    }
+                });
+            }
+            function validateAddClientLogin(param1, param2, param3, param4) {
+                var passing = {}
+                passing[param4]= $("#" + param3).val();
+                passing["param1"]= $("#" + param3).val();                
+                $.ajax({
+                    url: "CheckClientLoginServlet",
+                    data: passing,
+                    error: function() {
+                        $("#" + param1).addClass("error");
+                        $("#" + param1).removeClass("success");
+                        $("#" + param2).html("Wrong or occupied login!");
+                    },
+                    success: function(text) {
+                        response = text;
+                        console.log(text);
+                        if (response == "success") {
+                            $("#" + param1).addClass("success");
+                            $("#" + param1).removeClass("error");
+                            $("#" + param2).html("Ok!");
+                        } else {
+                            $("#" + param1).addClass("error");
+                            $("#" + param1).removeClass("success");
+                            $("#" + param2).html("Wrong or occupied login!");
+                        }
+                    }
+                });
+            }
+            function validateAddClientPassword() {
+                if ($("#addClientFieldPassword2").val() == $("#addClientFieldPassword").val()) {
+                    $("#addClientCGPassword2").addClass("success");
+                    $("#addClientCGPassword2").removeClass("error");
+                    $("#addClientLabelPassword2").html("Ok!");
+                    $("#addClientCGPassword").addClass("success");
+                    $("#addClientCGPassword").removeClass("error");
+                    $("#addClientLabelPassword").html("Ok!");
+                    validateAddClientInput('addClientCGPassword', 'addClientLabelPassword', 'addClientFieldPassword', 'clientsPassword');
+                    validateAddClientInput('addClientCGPassword2', 'addClientLabelPassword2', 'addClientFieldPassword2', 'clientsPassword');
+                } else {
+                    $("#addClientCGPassword2").addClass("error");
+                    $("#addClientCGPassword2").removeClass("success");
+                    $("#addClientLabelPassword2").html("Dont match!");
+                    $("#addClientCGPassword").addClass("error");
+                    $("#addClientCGPassword").removeClass("success");
+                    $("#addClientLabelPassword").html("Dont match!");                    
+                }
+            }
+            function addClientCheckOk() {
+                var inputFieldsOk = true;
+                if (inputFieldsOk) inputFieldsOk = ($("#addClientLabelSurname").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addClientLabelName").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addClientLabelMiddlename").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addClientLabelBirthday").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addClientLabelAddress").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addClientLabelTelephone").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addClientLabelEmail").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addClientLabelSex").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addClientLabelLogin").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addClientLabelPassword").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addClientLabelPassword2").html() == "Ok!");
+                if (!inputFieldsOk) {
+                    $("#addClientLabelSubmitBtn").html("<span class=\"text-error\">Check input fields!</span>");
+                    $("#addClientSubmitBtn").addClass("btn-danger");
+                } else {
+                    $("#addClientLabelSubmitBtn").html("<span class=\"text-success\">Wait.. Registering..</span>");
+                    $("#addClientSubmitBtn").addClass("disabled");
+                    $("#addClientSubmitBtn").addClass("btn-success");
+                    registerClient();
+                }
+            }
+            function registerClient() {
+                var passing = {}
+
+                passing["clientsName"] = $("#addClientFieldName").val();
+                passing["clientsMiddlename"] = $("#addClientFieldMiddlename").val();
+                passing["clientsSurname"] = $("#addClientFieldSurname").val();
+                passing["clientsBirthday"] = $("#addClientFieldBirthday").val();
+                passing["clientsAddress"] = $("#addClientFieldAddress").val();
+                passing["clientsTelephone"] = $("#addClientFieldTelephone").val();
+                passing["clientsEmail"] = $("#addClientFieldEmail").val();                
+                passing["clientsSex"] = $("#addClientFieldSex").val();
+                passing["clientsLogin"] = $("#addClientFieldLogin").val();
+                passing["clientsPassword"] = $("#addClientFieldPassword").val();
+
+                $.ajax({
+                    url: "RegisterClientServlet",
+                    data: passing,
+                    error: function() {
+                        $("#addClientLabelSubmitBtn").html("<span class=\"text-error\">Failed! Wrong data!</span>");
+                        $("#addClientSubmitBtn").addClass("btn-danger");
+                    },
+                    success: function(text) {
+                        response = text;
+                        if (response == "success") {
+                            $("#addClientLabelSubmitBtn").html("<span class=\"text-success\">Successfull!</span>");
+                            $("#addClientSubmitBtn").addClass("btn-success");
+                            $("#addClientSubmitBtn").addClass("disabled");                            
+                        } else {
+                            $("#addClientLabelSubmitBtn").html("<span class=\"text-error\">Failed! Wrong data!</span>");
+                            $("#addClientSubmitBtn").addClass("btn-danger");
+                        }
+                    }
+                }); 
+            }
+            function makeRemoveClientsFormElement(jsonGot) {
+                $("#contentPlace").load("elementsus.html #clientsUserAll", function(response) {
+                    $("#contentPlace").append($("<div></div>").load("elementsus.html #removeClientModal", function(response) { makeRemoveClientsFormElementP2(jsonGot);}));
+                });
+            }
+            function makeRemoveClientsFormElementP2(jsonGotP2) {
+                for (j=0; j <jsonGotP2.length; j++) {
+                    var newRow = document.createElement("tr");
+                    newRow.setAttribute("id", "rowNumber" + j);
+                    newRow.setAttribute("onclick", "makeRemoveRowSelected(\"rowNumber" + j + "\")");
+                    newRow.setAttribute("data-clientid", jsonGotP2[j].client_id);
+                    var cell1 = document.createElement("td");
+                    cell1.innerHTML = jsonGotP2[j].name+" "+jsonGotP2[j].middlename+" "+jsonGotP2[j].surname;
+                    var cell2 = document.createElement("td");
+                    cell2.innerHTML = jsonGotP2[j].address;
+                    var cell3 = document.createElement("td");
+                    cell3.innerHTML = jsonGotP2[j].telephone;
+                    var cell4 = document.createElement("td");
+                    cell4.innerHTML = jsonGotP2[j].email;
+                    var cell5 = document.createElement("td");
+                    cell5.innerHTML = jsonGotP2[j].login;
+                    var cell6 = document.createElement("td");
+                    cell6.innerHTML = jsonGotP2[j].birthday;
+                    newRow.appendChild(cell1);
+                    newRow.appendChild(cell2);                    
+                    newRow.appendChild(cell3);
+                    newRow.appendChild(cell4);
+                    newRow.appendChild(cell5);
+                    newRow.appendChild(cell6);                    
+                    document.getElementById("clientsUserAllTBody").appendChild(newRow);
+                }
+            }
+            function searchRemoveClientFormOut(jsonGotClientsSearch) {
+                var searchClientName = document.getElementById("searchClientByName").value.toLowerCase()// == "") ? null : document.getElementById("searchClientByName").value;
+                var searchClientAddress = document.getElementById("searchClientByAddress").value.toLowerCase()// == "") ? null : document.getElementById("searchClientByAddress").value;
+                var searchClientTelephone = document.getElementById("searchClientByTelephone").value.toLowerCase()// == "") ? null : document.getElementById("searchClientByTelephone").value;
+                var searchClientEmail = document.getElementById("searchClientByEmail").value.toLowerCase()// == "") ? null : document.getElementById("searchClientByEmail").value;
+                var searchClientLogin = document.getElementById("searchClientByLogin").value.toLowerCase()// == "") ? null : document.getElementById("searchClientByLogin").value;
+                for (i = 0; i < jsonGotClientsSearch.length; i++) {
+                    var keepRow = 1;
+                    var jsonFullName = jsonGotClientsSearch[i].name + " " + jsonGotClientsSearch[i].surname + " " + jsonGotClientsSearch[i].middlename;
+                    keepRow *= (jsonFullName.toLowerCase().indexOf(searchClientName) + 1);
+                    keepRow *= (jsonGotClientsSearch[i].address.toLowerCase().indexOf(searchClientAddress) + 1);
+                    keepRow *= (jsonGotClientsSearch[i].telephone.toLowerCase().indexOf(searchClientTelephone) + 1);
+                    keepRow *= (jsonGotClientsSearch[i].email.toLowerCase().indexOf(searchClientEmail) + 1);
+                    keepRow *= (jsonGotClientsSearch[i].login.toLowerCase().indexOf(searchClientLogin) + 1);
+                    if (keepRow == 0) {
+                        jsonGotClientsSearch.splice(i, 1);//delete jsonGotClientsSearch[i];
+                        i -= 1;
+                    }
+                }
+                document.getElementById("clientsUserAllTBody").innerHTML = "";
+                makeRemoveClientsFormElementP2(jsonGotClientsSearch);
+            }
+            function makeRemoveRowSelected(rowid) {
+                var prevSelRow = $("#clientsUserAllTBody").attr("class");
+                if (prevSelRow != null) document.getElementById(prevSelRow).removeAttribute("class");
+                if (prevSelRow == null) {
+                    $("#expandClientButton").html("Remove client");
+                    $("#expandClientButton").attr("onclick", "removeClientButtonPressed()");
+                    $("#expandClientButton").removeAttr("disabled");
+                }
+                document.getElementById("clientsUserAllTBody").setAttribute("class", rowid);
+                document.getElementById(rowid).setAttribute("class", "info");
+            }            
+            function removeClientButtonPressed(){
+                $("#expandClientButton").html("Wait...");
+                $("#expandClientButton").attr("disabled","disabled");
+                $('#removeClientApprModal').modal();
+            }
+            function abortRemoveClientModal() {
+                $("#expandClientButton").html("Remove client");
+                $("#expandClientButton").removeAttr("disabled");                
+            }
+            function removeClient() {
+                $('#removeClientApprModal').modal("hide");
+                var client_id = document.getElementById(document.getElementById("clientsUserAllTBody").getAttribute("class")).getAttribute(("data-clientid"));
+                console.log("remove");
+                $.ajax({
+                    url: "RemoveClientServlet",
+                    data: {"param1" : client_id},
+                    error: function() {
+                        $("#expandClientButton").html("FAILED");
+                        $("#expandClientButton").removeAttr("disabled");
+                            alert("Failed!");
+                    },
+                    success: function(text) {
+                        response = text;
+                        if (response == "failure") {
+                            $("#expandClientButton").html("FAILED");
+                            $("#expandClientButton").removeAttr("disabled");
+                            alert("Fail!");
+                        } else {
+                            alert("Successfull!");
+                            leftRemoveClientsMenuPressed();
+                        }
+                    }
+                });
+            }
+            function makeAgreementsFormElement(jsonGot) {
+                $("#contentPlace").load("elementsus.html #agreementsUserAll", function() {makeAgreementsFormElementP2(jsonGot);});
+            }
+            function makeAgreementsFormElementP2(jsonGotP2) {
+                for (j=0; j <jsonGotP2.length; j++) {
+                    var newRow = document.createElement("tr");
+                    newRow.setAttribute("id", "rowNumber" + j);
+                    newRow.setAttribute("onclick", "makeAgrRowSelected(\"rowNumber" + j + "\")");
+                    newRow.setAttribute("data-clientid", jsonGotP2[j].agr_id);
+                    var cell1 = document.createElement("td");
+                    cell1.innerHTML = jsonGotP2[j].agr_number;
+                    var cell2 = document.createElement("td");
+                    cell2.innerHTML = jsonGotP2[j].client.surname+" "+jsonGotP2[j].client.name+" "+jsonGotP2[j].client.middlename;
+                    var cell3 = document.createElement("td");
+                    cell3.innerHTML = jsonGotP2[j].date_written;
+                    var cell4 = document.createElement("td");
+                    cell4.innerHTML = jsonGotP2[j].sum_pay/100;
+                    var cell5 = document.createElement("td");
+                    cell5.innerHTML = jsonGotP2[j].date_pay;
+                    var paid = true;
+                    if (!("payment" in jsonGotP2[j])) paid = false;
+                    var cell6 = document.createElement("td");
+                    var cell7 = document.createElement("td");
+                    if (paid) {
+                        cell6.innerHTML = jsonGotP2[j].payment.paym_date;
+                        cell7.innerHTML = jsonGotP2[j].payment.paym_sum/100;
+                    } else {
+                        cell6.setAttribute("colspan", 2);
+                        cell6.innerHTML = "Not paid";
+                        newRow.setAttribute("class", "error");
+                    }
+                    newRow.appendChild(cell1);
+                    newRow.appendChild(cell2);                    
+                    newRow.appendChild(cell3);
+                    newRow.appendChild(cell4);
+                    newRow.appendChild(cell5);
+                    newRow.appendChild(cell6);                    
+                    newRow.appendChild(cell7);                    
+                    document.getElementById("agreementsUserAllTBody").appendChild(newRow);
+                }
+            }
+            function makeAgrRowSelected(rowid) {
+                var prevSelRow = $("#agreementsUserAllTBody").attr("class");
+                if (prevSelRow != null) $("#"+prevSelRow).removeClass("info");//document.getElementById(prevSelRow).removeAttribute("class");
+                if (prevSelRow == null) {
+                    $("#expandClientButton").removeAttr("disabled");
+                }
+                document.getElementById("agreementsUserAllTBody").setAttribute("class", rowid);
+                $("#"+rowid).addClass("info");//document.getElementById(rowid).setAttribute("class", "info");
+            }
+            
+            function searchAgreementFormOut(jsonGotAgreementsSearch) {
+                var searchAgreementNumber = document.getElementById("searchAgreementByNumber").value;
+                var searchAgreementName = document.getElementById("searchAgreementByName").value.toLowerCase();
+                var searchAgreementSum = parseInt(document.getElementById("searchAgreementBySum").value)*100;
+                var searchAgreementPaid = document.getElementById("searchAgreementByPaid").value;
+                for (i = 0; i < jsonGotAgreementsSearch.length; i++) {
+                    var keepRow = 1;
+                    var jsonFullName = jsonGotAgreementsSearch[i].client.name + " " + jsonGotAgreementsSearch[i].client.surname + " " + jsonGotAgreementsSearch[i].client.middlename;
+                    keepRow *= (jsonGotAgreementsSearch[i].agr_number.indexOf(searchAgreementNumber) + 1);
+                    keepRow *= (jsonFullName.toLowerCase().indexOf(searchAgreementName) + 1);
+//                    keepRow *= ($.datepicker.formatDate('yy-mm-dd', jsonGotAgreementsSearch[i].date_written).indexOf(searchAgreementDate) + 1);
+                    keepRow *= (jsonGotAgreementsSearch[i].sum_pay.toString().indexOf((searchAgreementSum.toString()=="NaN") ? "" : searchAgreementSum.toString())+1);
+                    if ((searchAgreementPaid.indexOf("paid") > 0)){
+                        keepRow *= ("payment" in jsonGotAgreementsSearch[i]) ? 0:1;
+                    }
+                    if ((searchAgreementPaid.indexOf("paid") == 0)){
+                        keepRow *= ("payment" in jsonGotAgreementsSearch[i]) ? 1:0;
+                    } 
+                    if ((searchAgreementPaid.indexOf("paid") < 0))  keepRow *= 1//((searchAgreementPaid.indexOf("paid") < 0)) keepRow *= 1;
+                    if (keepRow == 0) {
+                        jsonGotAgreementsSearch.splice(i, 1);//delete jsonGotClientsSearch[i];
+                        i -= 1;
+                    }
+                }
+                document.getElementById("agreementsUserAllTBody").innerHTML = "";
+                makeAgreementsFormElementP2(jsonGotAgreementsSearch);
+            }
+            function searchAgreementsReset() {
+                document.getElementById("searchAgreementByNumber").value = "";
+                document.getElementById("searchAgreementByName").value = "";
+                document.getElementById("searchAgreementBySum").value = "";
+                document.getElementById("searchAgreementByPaid").value = "any";
+                searchAgreementKeyPressed();
+            }
+            function validateAddAgreementInput(param1, param2, param3, param4) {
+                console.log("param4: " + param4 + " param3: " + param3 + "val: " + $("#" + param3).val());
+                var passing = {}
+                passing[param4]= $("#" + param3).val();
+                $.ajax({
+                    url: "ValidateServlet",
+                    data: passing,
+                    error: function() {
+                        $("#" + param1).addClass("error");
+                        $("#" + param1).removeClass("success");
+                        $("#" + param2).html("Wrong input!");
+                    },
+                    success: function(text) {
+                        response = text;
+                        console.log(text);
+                        if (response == "success") {
+                            $("#" + param1).addClass("success");
+                            $("#" + param1).removeClass("error");
+                            $("#" + param2).html("Ok!");
+                        } else {
+                            $("#" + param1).addClass("error");
+                            $("#" + param1).removeClass("success");
+                            $("#" + param2).html("Wrong input!");
+                        }
+                    }
+                });
+            }
+            function validateAddAgreementSum(param1, param2, param3, param4) {
+                var passing = {}
+                sum = parseFloat($("#" + param3).val().replace(/[,]+/g, '.'))*100;
+                passing[param4]= sum //$("#" + param3).val();
+                console.log("param4: " + param4 + " param3: " + param3 + "val: " + $("#" + param3).val() + " converted value:" + sum);
+                $.ajax({
+                    url: "ValidateServlet",
+                    data: passing,
+                    error: function() {
+                        $("#" + param1).addClass("error");
+                        $("#" + param1).removeClass("success");
+                        $("#" + param2).html("Wrong input!");
+                    },
+                    success: function(text) {
+                        response = text;
+                        console.log(text);
+                        if (response == "success") {
+                            $("#" + param1).addClass("success");
+                            $("#" + param3).val(sum/100);
+                            $("#" + param1).removeClass("error");
+                            $("#" + param2).html("Ok!");
+                        } else {
+                            $("#" + param1).addClass("error");
+                            $("#" + param1).removeClass("success");
+                            $("#" + param2).html("Wrong input!");
+                        }
+                    }
+                });
+            }
+            function validateAddAgreementNumber(param1, param2, param3, param4) {
+                var passing = {}
+                passing[param4]= $("#" + param3).val();
+                passing["param1"]= $("#" + param3).val();                
+                $.ajax({
+                    url: "CheckAgreementNumberServlet",
+                    data: passing,
+                    error: function() {
+                        $("#" + param1).addClass("error");
+                        $("#" + param1).removeClass("success");
+                        $("#" + param2).html("Wrong or occupied number!");
+                    },
+                    success: function(text) {
+                        response = text;
+                        console.log(text);
+                        if (response == "success") {
+                            $("#" + param1).addClass("success");
+                            $("#" + param1).removeClass("error");
+                            $("#" + param2).html("Ok!");
+                        } else {
+                            $("#" + param1).addClass("error");
+                            $("#" + param1).removeClass("success");
+                            $("#" + param2).html("Wrong or occupied login!");
+                        }
+                    }
+                });
+            }
+            function addAgreementCheckOk() {
+                var inputFieldsOk = true;
+                if (inputFieldsOk) inputFieldsOk = ($("#addAgreementLabelClient").html() == "Ok!");                
+                if (inputFieldsOk) inputFieldsOk = ($("#addAgreementLabelAgr_number").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addAgreementLabelDate_written").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addAgreementLabelDate_begin").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addAgreementLabelDate_end").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addAgreementLabelDate_pay").html() == "Ok!");
+                if (inputFieldsOk) inputFieldsOk = ($("#addAgreementLabelSum_pay").html() == "Ok!");
+                if (!inputFieldsOk) {
+                    $("#addAgreementLabelSubmitBtn").html("<span class=\"text-error\">Check input fields!</span>");
+                    $("#addAgreementSubmitBtn").addClass("btn-danger");
+                } else {
+                    $("#addAgreementLabelSubmitBtn").html("<span class=\"text-success\">Wait.. Registering..</span>");
+                    $("#addAgreementSubmitBtn").addClass("disabled");
+                    $("#addAgreementSubmitBtn").addClass("btn-success");
+                    registerAgreement();
+                }
+            }
+            function registerAgreement() {
+                var passing = {}
+                passing["agreementsClient"] = $("#addAgreementFieldClient").attr("class");
+                passing["agreementsAgr_number"] = $("#addAgreementFieldAgr_number").val();
+                passing["agreementsDate_written"] = $("#addAgreementFieldDate_written").val();
+                passing["agreementsDate_begin"] = $("#addAgreementFieldDate_begin").val();
+                passing["agreementsDate_end"] = $("#addAgreementFieldDate_end").val();
+                passing["agreementsDate_pay"] = $("#addAgreementFieldDate_pay").val();
+                passing["agreementsSum_pay"] = parseFloat($("#addAgreementFieldSum_pay").val())*100;
+                console.log(passing);
+                $.ajax({
+                    url: "RegisterAgreementServlet",
+                    data: passing,
+                    error: function() {
+                        $("#addAgreementLabelSubmitBtn").html("<span class=\"text-error\">Failed! Wrong data!</span>");
+                        $("#addAgreementSubmitBtn").addClass("btn-danger");
+                    },
+                    success: function(text) {
+                        response = text;
+                        if (response == "success") {
+                            $("#addAgreementLabelSubmitBtn").html("<span class=\"text-success\">Successfull!</span>");
+                            $("#addAgreementSubmitBtn").addClass("btn-success");
+                            $("#addAgreementSubmitBtn").addClass("disabled");                            
+                        } else {
+                            $("#addAgreementLabelSubmitBtn").html("<span class=\"text-error\">Failed! Wrong data!</span>");
+                            $("#addAgreementSubmitBtn").addClass("btn-danger");
+                        }
+                    }
+                }); 
+            }
+            var jsonGotClientsModal;
+            function chooseClientModalStart() {
+                $.ajax( {
+                    url: "GetUserClientsServlet",
+                    error: function() {$("#chooseClientModalWait").html("Failed. Try again") },
+                    success: function(text) {
+                        var response = text;
+                        if (response == "failure") $("#chooseClientModalWait").html("Failed. Try again");
+                        if (response == "nodata") $("#chooseClientModalWait").html("<div class=\"alert\"><h3><strong>Sorry!</strong></h3>    <h5>You don't have any clients.</h5></div>​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​");
+                        if (response != "failure" && response != "nodata") {
+                        jsonGotClientsModal = JSON.parse(response);
+                        $("#chooseClientModalWait").html("");
+                        fillClientModalTable(jsonGotClientsModal);
+                        }
+                   }
+                });
+            }
+            function fillClientModalTable(jsonGotClientsModal){
+                document.getElementById("chooseClientModalTBody").innerHTML = "";                
+                for (j=0; j <jsonGotClientsModal.length; j++) {
+                    var newRow = document.createElement("tr");
+                    newRow.setAttribute("id", "rowNumber" + j);
+                    newRow.setAttribute("onclick", "makeModalRowSelected(\"rowNumber" + j + "\")");
+                    newRow.setAttribute("data-clientid", jsonGotClientsModal[j].client_id);
+                    var cell1 = document.createElement("td");
+                    cell1.innerHTML = jsonGotClientsModal[j].surname + " " + jsonGotClientsModal[j].name + " " + jsonGotClientsModal[j].middlename;
+                    var cell2 = document.createElement("td");
+                    cell2.innerHTML = jsonGotClientsModal[j].birthday;
+                    newRow.appendChild(cell1);
+                    newRow.appendChild(cell2);                    
+                    document.getElementById("chooseClientModalTBody").appendChild(newRow);
+                }                
+            }
+            function makeModalRowSelected(rowId) {
+                var prevSelRow = $("#chooseClientModalTBody").attr("class");
+                if (prevSelRow != null) $("#" + prevSelRow).removeClass();
+                $("#chooseClientModalTBody").attr("class", rowId);
+                $("#"+rowId).attr("class", "info");
+            }
+            function chooseClientModalSearch() {
+                var searchClientName = document.getElementById("chooseClientModalSearchName").value.toLowerCase()
+                for (j = 0; j < jsonGotClientsModal.length; j++) {
+                    var jsonFullName = jsonGotClientsModal[j].name + " " + jsonGotClientsModal[j].surname + " " + jsonGotClientsModal[j].middlename;
+                    if (jsonFullName.toLowerCase().indexOf(searchClientName) + 1 == 0) $("#"+"rowNumber" + j).hide();
+                    else $("#"+"rowNumber" + j).show();
+                }
+            }
+            function chooseAddAgreementClient() {
+                var client_id = document.getElementById(document.getElementById("chooseClientModalTBody").getAttribute("class")).getAttribute(("data-clientid"));
+                $("#addAgreementLabelClient").html("Ok!");
+                $("#addAgreementLabelClient").addClass("text-success");                
+                for (j=0;j<jsonGotClientsModal.length;j++){
+                    if (client_id == jsonGotClientsModal[j].client_id) {
+                        $("#addAgreementFieldClient").val(jsonGotClientsModal[j].surname + " " + jsonGotClientsModal[j].name + " " + jsonGotClientsModal[j].middlename);
+                        $("#addAgreementFieldClient").attr("class", client_id);
+                    }
+                }
+                $("#chooseClientModal").modal("hide");
+            }
+
+            function removeAgreementsFormElement(jsonGot) {
+                $("#contentPlace").load("elementsus.html #agreementsUserAll", function() {
+                    makeAgreementsFormElementP2(jsonGot);
+                    removeAgreementsFormButtons(jsonGot);
+                });
+            }
+            function removeAgreementsFormButtons(jsonGot) {
+                $("#expandClientButton").html("Remove agreement");
+                $("#expandClientButton").attr("onclick","removeAgreementModal()");
+            }
+            function removeAgreementModal() { 
+                $('#removeAgreementApprModal').modal();
+            }
+            function removeAgreement() {
+                $('#removeAgreementApprModal').modal("hide");
+                var agreement_id = document.getElementById(document.getElementById("agreementsUserAllTBody").getAttribute("class")).getAttribute(("data-clientid"));
+                console.log("remove");
+                $.ajax({
+                    url: "RemoveAgreementServlet",
+                    data: {"param1" : agreement_id},
+                    error: function() {
+                        $("#expandClientButton").html("FAILED");
+                        alert("Failed!");
+                    },
+                    success: function(text) {
+                        response = text;
+                        if (response == "failure") {
+                            $("#expandClientButton").html("FAILED");
+                            alert("Fail!");
+                        } else {
+                            alert("Successfull!");
+                            leftRemoveAgreementsMenuPressed();
+                        }
+                    }
+                });
+            }
+            

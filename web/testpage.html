@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="CSS/bootstrap.css" rel="stylesheet">
+        <link href="CSS/bootstrap-responsive.css" rel="stylesheet">
+        <script src="JS/jquery.js"></script>
+        <script src="JS/bootstrap.js"></script>
+
+<script>
+        function checkServlet() {    
+        console.log("---------- func started ---------")
+        }
+        function checkServlet2() {
+        var birthdayMonth = window.document.getElementById("inputBirthdayMonth").value;
+        var birthdayDay = window.document.getElementById("inputBirthdayDay").value;
+        var birthdayYear = window.document.getElementById("inputBirthdayYear").value;
+        var birthdate = (birthdayYear + "-" + birthdayMonth + "-" + birthdayDay);
+        var xmlhttp;
+        console.log("---------- func started ---------")
+        if (window.XMLHttpRequest)
+              {// code for IE7+, Firefox, Chrome, Opera, Safari
+              xmlhttp=new XMLHttpRequest();
+            console.log("---------- code for IE7+, Firefox, Chrome, Opera, Safari started ---------")              
+              }
+            else
+              {// code for IE6, IE5
+              xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            console.log("---------- ccode for IE6, IE5 started ---------")              
+              }
+            xmlhttp.onreadystatechange=function()
+              {
+            console.log("---------- ready state changed ------------");
+            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                console.log("---------- ready state 4!!!!!!!!! ------------");
+                alert(xmlhttp.responseText);
+              }
+              }
+            console.log("---------- here? ------------");
+            console.log("---------- GET sent with params: " + 
+                "param1=" + document.getElementById("inputLogin").value + 
+                "param2=" + document.getElementById("inputPassword").value +                 
+                "param3=" + document.getElementById("inputEmail").value +                 
+                "param4=" + document.getElementById("inputSurname").value + 
+                "param5=" + document.getElementById("inputName").value + 
+                "param6=" + document.getElementById("inputMiddlename").value + 
+                "param7=" + birthdate + 
+                "param8=" + document.getElementById("inputSex").value +                 
+                "param9=" + document.getElementById("inputAddress").value + 
+                "param10=" + document.getElementById("inputTelephone").value);
+            xmlhttp.open("GET", "TestRegistrationServlet?" + "param1=" + document.getElementById("inputLogin").value + "&" + "param2=" + document.getElementById("inputPassword").value + "&" + "param3=" + document.getElementById("inputEmail").value + "&" + "param4=" + document.getElementById("inputSurname").value + "&" + "param5=" + document.getElementById("inputName").value + "&" + "param6=" + document.getElementById("inputMiddlename").value + "&" + "param7=" + birthdate + "&" + "param8=" + document.getElementById("inputSex").value + "&" + "param9=" + document.getElementById("inputAddress").value + "&" + "param10=" + document.getElementById("inputTelephone").value, true);
+            xmlhttp.send();
+            document.getElementById("inputLogin").value = "PRESSED";
+         }
+
+function checkDate() {
+var birthdayMonth = window.document.getElementById("inputBirthdayMonth").value;
+var birthdayDay = window.document.getElementById("inputBirthdayDay").value;
+var birthdayYear = window.document.getElementById("inputBirthdayYear").value;
+if (birthdayMonth.length < 2) birthdayMonth = "0" + birthdayMonth;
+if (birthdayDay.length < 2) birthdayDay = "0" + birthdayDay;
+var birthdate = new Date(Date.parse(birthdayYear + "-" + birthdayMonth + "-" + birthdayDay));
+console.log(birthdayYear + "-" + birthdayMonth + "-" + birthdayDay + "   ------   " + birthdate);
+if (birthdate == "Invalid Date") window.document.getElementById("inputBirthdayLabel").innerHTML = "<span class=\"text-error\">Wrong Date!</span>";
+else window.document.getElementById("inputBirthdayLabel").innerHTML = "<span class=\"text-success\">Ok!</span>";
+} 
+function typeaheadCall() {
+                
+                $.ajax( {
+                    url: "GetUserClientsServlet",
+                    error: function() {$(location).attr("href","index.jsp");  },
+                    success: function(text) {
+                        var response = text;
+                        if (response == "failure") alert("failure");
+                        if (response == "nodata") alert("nodata");
+                        if (response != "failure" && response != "nodata") {
+                            var jsonGotClients = JSON.parse(response);
+                            var jsonToParse = ' { "options" : [';
+                            for (var j=0; j < jsonGotClients.length; j++) {;
+                                if (j == jsonGotClients.length - 1) jsonToParse += ' "'+jsonGotClients[j].surname + " " + jsonGotClients[j].name + " " + jsonGotClients[j].middlename + '"';
+                                else jsonToParse += ' "'+jsonGotClients[j].surname + " " + jsonGotClients[j].name + " " + jsonGotClients[j].middlename + '", ';
+                            }
+                            jsonToParse += ' ] }';
+                            console.log (jsonToParse);
+                            var jsonGotOptions = JSON.parse(jsonToParse);
+                            console.log (jsonGotOptions);
+                        }
+                    }
+                });
+
+$('.typeahead').typeahead({
+    source: function (query, process) {
+        return $.get('GetUserClientsServlet', function (data) {
+            return process(data.options);
+        });
+    }
+});
+/*$('.typeahead').typeahead({
+        source: function (query, process) {
+            return $.get('/typeahead', { query: query }, function (data) {
+                return process(data.options);
+            });
+        }
+    });    */
+}
+</script> 
+
+    </head>
+    <body>
+        <div id="typeaheadPlace">
+<input type="text" data-provide="typeahead" onclick="typeaheadCall()">
+        </div>
+<form class="form-horizontal">
+
+<div class="control-group">
+    <label class="control-label" for="inputLogin">Login</label>
+    <div class="controls">
+        <input type="text" id="inputLogin" placeholder="Login" value="1">
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="inputPassword">Password</label>
+    <div class="controls">
+        <input type="text" id="inputPassword"  value="2" placeholder="Password">
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="inputEmail">Email</label>
+    <div class="controls">
+        <input type="email" id="inputEmail"  value="3@3" placeholder="Email">
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="inputSurname">Surname</label>
+    <div class="controls">
+        <input type="text" id="inputSurname"  value="4" placeholder="Surname">
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="inputName">Name</label>
+    <div class="controls">
+        <input type="text" id="inputName"  value="5" placeholder="Name">
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="inputMiddlename">Middlename</label>
+    <div class="controls">
+        <input type="text" id="inputMiddlename"  value="6" placeholder="Middlename">
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="inputBirthday" id="inputBirthdayLabel">Birthday</label>
+    <div class="controls">
+        <input type="number" class="input-small" id="inputBirthdayYear"  value="1982" placeholder="Year" onblur="checkDate()">
+        <input type="number" class="input-small" id="inputBirthdayMonth"  value="08" placeholder="Month" onblur="checkDate()">
+        <input type="number" class="input-small" id="inputBirthdayDay"  value="15" placeholder="Day" onblur="checkDate()">
+    </div>
+</div>
+    
+<div class="control-group">
+    <label class="control-label" for="inputSex">Sex</label>
+    <div class="controls">
+
+<select id="inputSex" placeholder="Sex"  value="male">
+  <option>male</option>
+  <option>female</option>
+</select>
+    </div>
+</div>
+    
+<div class="control-group">
+    <label class="control-label" for="inputAddress">Address</label>
+    <div class="controls">
+        <input type="text" id="inputAddress"  value="9" placeholder="Address">
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="inputTelephone">Telephone</label>
+    <div class="controls">
+        <input type="text" id="inputTelephone"  value="10" placeholder="Telephone">
+    </div>
+</div>
+
+<div class="control-group">
+    <div class="controls">
+
+        <input class="btn" type="button" onclick="checkServlet2()" value="Register"/>
+
+    </div>
+</div>   
+    
+    
+</form>​​​        
+
+
+    </body>
+</html>
