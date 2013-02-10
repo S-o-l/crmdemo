@@ -61,6 +61,20 @@
                     $("#loginButton").removeAttr("disabled");
                     parseAnswer(response) }
             });
+            window.setTimeout(function(){
+            $.ajax({
+                url: 'ClientLoginServlet',
+                data: { param1: login, param2: password },
+                error: function() {
+                    $("#replyField").innerHtml = "Failed!";
+                    $("#loginButton").removeAttr("disabled");
+                },
+                success : function(text){
+                    response = text;
+                    $("#loginButton").removeAttr("disabled");
+                    parseAnswer(response) }
+            });
+            }, 500);
         }
         function parseAnswer(data) {
             if (data == "success") {
@@ -84,6 +98,17 @@
                 },
                 success: function(text) { response = text; parseUserAnswer(response) }
             });
+            window.setTimeout(function(){
+            $.ajax ({
+                url: "UserLoginServlet",
+                data: { param1: login, param2: password },
+                error: function() {
+                    $("#replyUserField").innerHtml = "Failed!";
+                    $("#loginUserButton").removeAttr("disabled");
+                },
+                success: function(text) { response = text; parseUserAnswer(response) }
+            });
+            }, 500);
         }
         function parseUserAnswer(data) {
             if (data == "success") {
